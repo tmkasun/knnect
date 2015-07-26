@@ -11,12 +11,16 @@ class AdminService(object):
         self.tenant = HttpAuthenticated(username=api['username'], password=api['password'])
 
         self.protocol = 'http'
+        self.port = api['port']
+
+        # TODO: Is Admin service available without ssl ?
         if api['ssl']:
             self.protocol = 'https'
+            self.port = api['ssl_port']
 
-        self.wsdl_url = '{}://{}:{}/services/{}?wsdl'.format(self.protocol, api['host'], api['port'],
+        self.wsdl_url = '{}://{}:{}/services/{}?wsdl'.format(self.protocol, api['host'], self.port,
                                                              service_name)
-        self.service_url = '{}://{}:{}/services/{}'.format(self.protocol, api['host'], api['port'],
+        self.service_url = '{}://{}:{}/services/{}'.format(self.protocol, api['host'], self.port,
                                                            service_name)
 
     def connect(self):
