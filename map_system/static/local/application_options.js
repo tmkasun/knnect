@@ -21,10 +21,10 @@ var ApplicationOptions = {
         STATIC_URL: '/static/',
 
         SPEED_HISTORY_COUNT: 20,
-        NOTIFY_INFO_TIMEOUT: 1000,
-        NOTIFY_SUCCESS_TIMEOUT: 1000,
+        NOTIFY_INFO_TIMEOUT: 3000,
+        NOTIFY_SUCCESS_TIMEOUT: 4000,
         NOTIFY_WARNING_TIMEOUT: 3000,
-        NOTIFY_DANGER_TIMEOUT: 5000
+        NOTIFY_DANGER_TIMEOUT: 9000
     },
     messages:{
         app:{
@@ -39,6 +39,24 @@ var ApplicationOptions = {
             warningIcon: '/static/images/markers/arrow_warning.png',
             defaultIcon: '/static/images/markers/default_icons/marker-icon.png',
             resizeIcon: '/static/images/markers/resize.png'
+
+        }
+    },
+    locale: {
+        type: 'sin',
+        sin: {
+            websocket:{
+                errors:{
+                    'connection': 'වෙබ් සොකට් සම්බන්ධතාවය විසන්ඳිවී ඇත කරුණාකර ඔබගේ අන්තර්ජාල සබදතාවය පරීක්ශාකර බලන්න  '
+                }
+            }
+        },
+        eng: {
+            websockt: {
+                errors:{
+                    'connection': 'Something went wrong when trying to connect to WebSocket </br> <b>Please check your internet or Network connection<b/>'
+                }
+            }
 
         }
     }

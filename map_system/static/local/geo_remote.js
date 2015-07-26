@@ -78,7 +78,8 @@ function addWmsEndPoint() {
         format: outputFormat ? outputFormat : 'image/png',
 //        version: wmsVersion,
         transparent: true,
-        opacity: 0.4});
+        opacity: 0.4
+    });
 
     layerControl.addOverlay(wmsLayer, serviceName, "Web Map Service layers");
     map.addLayer(wmsLayer);
@@ -101,7 +102,10 @@ function addWmsEndPoint() {
         closeAll();
     });
 }
-
+/**
+ * Send new speed limit global value to back-end via post
+ * CSRF has been used to prevvent man of the middle type of attacks , see `map_service/views.py#proximity_alert` for more infomation
+ */
 function setSpeedAlert() {
     var speedAlertValue = $("#speedAlertValue").val();
     data = { // TODO: change content type to app/json
@@ -111,17 +115,16 @@ function setSpeedAlert() {
         //'customName': null,
         //'cepAction': 'edit' // TODO: what if setting speed alert for the first time ?? that should be a deployment ? try 'edit' if fails 'deploy' , need to handle at the jaggery back end
     };
+    setAjaxNotify("Setting new speed alert...");
     $.post('/map_service/set_speed_alert', data, function (response) {
-        $.UIkit.notify({
-            message: '<span style="color: dodgerblue">' + response.status + '</span><br>' + response.message,
-            status: (response.status == 'success' ? 'success' : 'danger'),
-            timeout: 3000,
-            pos: 'top-center'
-        });
-        closeAll();
+        setAjaxNotify("Successfully set new speed limit", 'success');
+
     }, 'json');
 }
 
+/**
+ * Send GeoJson of the selected area by the user to the back-end server
+ * */
 function setWithinAlert(leafletId) {
     /*
      * TODO: replace double quote to single quote because of a conflict when deploying execution plan in CEP
@@ -132,20 +135,14 @@ function setWithinAlert(leafletId) {
     var queryName = $("#queryName").val();
     var areaName = $("#areaName").val();
     var data = {
-        'parseData': JSON.stringify({'geoFenceGeoJSON': selectedAreaGeoJson, 'executionPlanName': _createExecutionPlanName(queryName,"WithIn"), 'areaName': areaName}),
-        'executionPlan': 'within',
-        'customName': areaName, // TODO: fix , When template copies there can be two queryName and areaName id elements in the DOM
-        'queryName': queryName,
-        'cepAction': 'deploy'
+        'geoFenceGeoJSON': selectedAreaGeoJson,
+        'areaName': areaName, // TODO: fix , When template copies there can be two queryName and areaName id elements in the DOM
+        'queryName': queryName
     };
-    $.post('controllers/set_alerts.jag', data, function (response) {
-        $.UIkit.notify({
-            message: '<span style="color: dodgerblue">' + response.status + '</span><br>' + response.message,
-            status: (response.status == 'success' ? 'success' : 'danger'),
-            timeout: 3000,
-            pos: 'top-center'
-        });
-        closeAll();
+    console.log('DEBUG: Reached this point');
+    setAjaxNotify("Applying new geo-fence area...");
+    $.post('/map_service/set_geofence', data, function (response) {
+        setAjaxNotify("New geo-fence added to the system successfully...",'success');
         closeTools(leafletId);
     }, 'json');
 }
@@ -159,10 +156,10 @@ function setStationeryAlert(leafletId) {
     var selectedAreaGeoJson = map._layers[leafletId].toGeoJSON().geometry;
 
     //if a circle is drawn adding radius for the object
-    if(selectedAreaGeoJson.type=="Point"){
+    if (selectedAreaGeoJson.type == "Point") {
 
-        var radius=map._layers[leafletId]._mRadius;
-        selectedAreaGeoJson["radius"]=radius;
+        var radius = map._layers[leafletId]._mRadius;
+        selectedAreaGeoJson["radius"] = radius;
     }
 
     var selectedProcessedAreaGeoJson = JSON.stringify(selectedAreaGeoJson).replace(/"/g, "'");
@@ -171,7 +168,12 @@ function setStationeryAlert(leafletId) {
     var stationeryName = $("#areaName").val();
     var time = $("#time").val();
     var data = {
-        'parseData': JSON.stringify({'geoFenceGeoJSON': selectedProcessedAreaGeoJson, 'executionPlanName': _createExecutionPlanName(queryName,"Stationery"), 'stationeryName': stationeryName , 'stationeryTime': time}),
+        'parseData': JSON.stringify({
+            'geoFenceGeoJSON': selectedProcessedAreaGeoJson,
+            'executionPlanName': _createExecutionPlanName(queryName, "Stationery"),
+            'stationeryName': stationeryName,
+            'stationeryTime': time
+        }),
         'executionPlan': 'stationery',
         'customName': stationeryName, // TODO: fix , When template copies there can be two queryName and areaName id elements in the DOM
         'queryName': queryName,
@@ -189,12 +191,12 @@ function setStationeryAlert(leafletId) {
     }, 'json');
 }
 
-function removeGeoFence(geoFenceElement,id) {
+function removeGeoFence(geoFenceElement, id) {
     var queryName = $(geoFenceElement).attr('data-queryName');
     var areaName = $(geoFenceElement).attr('data-areaName');
 
     data = {
-        'executionPlanName': _createExecutionPlanName(queryName,id),
+        'executionPlanName': _createExecutionPlanName(queryName, id),
         'queryName': queryName,
         'cepAction': 'undeploy',
         'alertType': id
@@ -232,7 +234,7 @@ function getAlertsHistory(objectId) {
                     break;
             }
             $(alertDOMElement).html(val.information);
-            $(alertDOMElement).css({marginTop : "5px"});
+            $(alertDOMElement).css({marginTop: "5px"});
             $(alertDOMElement).attr('onClick', 'showAlertInMap(this)');
 
             // Set HTML5 data attributes for later use
@@ -247,33 +249,36 @@ function getAlertsHistory(objectId) {
     });
 }
 
+/**
+ * Send new proximity function arguments to backend
+ */
 function setProximityAlert() {
     var proximityDistance = $("#proximityDistance").val();
     var proximityTime = $("#proximityTime").val();
     var data = {
-        'parseData': JSON.stringify({'proximityTime': proximityTime, 'proximityDistance': proximityDistance}),
-        'executionPlan': 'proximity',
-        'customName': null,
-        'cepAction': 'edit'
+        /*
+         TODO: Remove if nolonger needed, Stringify is not nessasay, Current architecture(V 1.1) do not requires execution plan parameter
+         'parseData': JSON.stringify({'proximityTime': proximityTime,'proximityDistance': proximityDistance}),
+         'executionPlan': 'proximity',
+         'customName': null,
+         'cepAction': 'edit',
+         */
+        'proximityTime': proximityTime,
+        'proximityDistance': proximityDistance
     };
-    $.post('controllers/set_alerts.jag', data, function (response) {
-        $.UIkit.notify({
-            message: '<span style="color: dodgerblue">' + response.status + '</span><br>' + response.message,
-            status: (response.status == 'success' ? 'success' : 'danger'),
-            timeout: 3000,
-            pos: 'top-center'
-        });
-        closeAll();
+    setAjaxNotify("Setting new Proximity alert...");
+    // TODO: Use django composer
+    $.post('/map_service/set_proximity_alert', data, function (response) {
+        setAjaxNotify("Successfully set new Proximity limit", 'success');
     }, 'json');
 }
 
-// TODO:this is not a remote call , move this to application.js
-function _createExecutionPlanName(queryName,id) {
+function _createExecutionPlanName(queryName, id) {
 
-    if(id=="WithIn"){
+    if (id == "WithIn") {
         return 'geo_within' + (queryName ? '_' + queryName : '') + '_alert'; // TODO: value of the `queryName` can't be empty, because it will cause name conflicts in CEP, have to do validation(check not empty String)
     }
-    else if(id=="Stationery"){
+    else if (id == "Stationery") {
         return 'geo_stationery' + (queryName ? '_' + queryName : '') + '_alert'; // TODO: value of the `queryName` can't be empty, because it will cause name conflicts in CEP, have to do validation(check not empty String)
     }
 
@@ -287,7 +292,7 @@ function getTileServers() {
         $.each(data, function (key, val) {
             $.UIkit.notify({
                 message: 'Loading... <span style="color: #ccfcff">' + val.name + '</span>' +
-                    ' URL: <span style="color: #00ff00">' + val.url + '</span>',
+                ' URL: <span style="color: #00ff00">' + val.url + '</span>',
                 status: 'info',
                 timeout: ApplicationOptions.constance.NOTIFY_INFO_TIMEOUT,
                 pos: 'bottom-left'
@@ -317,7 +322,8 @@ function getWms() {
                 format: val.format ? val.format : 'image/png',
                 version: val.version,
                 transparent: true,
-                opacity: 0.4});
+                opacity: 0.4
+            });
             layerControl.addOverlay(wmsLayer, val.name, "Web Map Service layers");
         });
     });

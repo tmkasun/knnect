@@ -61,3 +61,7 @@ class EventProcessor(object):
     def editActiveExecutionPlanConfiguration(self, new_execution_plan, name):
         escaped_xml = escapeXml(new_execution_plan)
         return self._carbon.client.service.editActiveExecutionPlanConfiguration(escaped_xml, name=name)
+
+    def deployExecutionPlanConfigurationFromConfigXml(self, executionPlanConfigurationXml):
+        escaped_xml = escapeXml(executionPlanConfigurationXml)
+        return self._carbon.client.service.deployExecutionPlanConfigurationFromConfigXml(escaped_xml)

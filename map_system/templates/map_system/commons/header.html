@@ -19,7 +19,6 @@
 
     <link rel="icon" sizes="196x196" href="{% static 'images/favicon-196.png' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
-    <link rel="stylesheet" href="{% static 'libraries/app.css' %}">
 
     <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
     {#    Load Bootstrap from common knnector static files #}
@@ -33,7 +32,7 @@
     {#    TODO: Have use Leaflet Beta relese 1.0 , Replace with latest production version when available(JS only) #}
     {#    TODO: leaflet.css is used from older geo-dashboard app , since latest one gives errors (markers are not visible with leaflet new CSS), replace or fix it #}
     <link rel="stylesheet" href="{% static 'libraries/leaflet/leaflet.css' %}"/>
-    <script src="{% static 'libraries/leaflet/leaflet.js' %}"></script>
+    <script src="{% static 'libraries/leaflet/leaflet-src.js' %}"></script>
 
     <link rel="stylesheet" href="{% static 'libraries/leaflet/locatecontrol-0.43.0/dist/L.Control.Locate.css' %}"/>
     <script src="{% static 'libraries/leaflet/locatecontrol-0.43.0/dist/L.Control.Locate.min.js' %}"></script>
@@ -93,6 +92,8 @@
         ApplicationOptions.constance.STATIC_URL = "{% static '' %}";
 
     </script>
+     <link rel="stylesheet" href="{% static 'libraries/app.css' %}">
+
     <script src="{% static 'local/websocket.js' %}"></script>
     <script src="{% static 'local/geo_remote.js' %}"></script>
     <script src="{% static 'local/geo_fencing.js' %}"></script>

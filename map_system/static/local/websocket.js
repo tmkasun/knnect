@@ -1,4 +1,3 @@
-
 var debugObject; // assign object and debug from browser console, this is for debugging purpose , unless this var is unused
 var showPathFlag = false; // Flag to hold the status of draw objects path
 var currentSpatialObjects = {};
@@ -8,14 +7,15 @@ var websocket;
 
 // Make the function wait until the connection is made...
 var waitTime = 1000;
-function waitForSocketConnection(socket, callback){
+var notifyObject = null;
+function waitForSocketConnection(socket, callback) {
     setTimeout(
         function () {
             if (socket.readyState === 1) {
                 initializeWebSocket();
                 waitTime = 1000;
                 console.log("Connection is made");
-                if(callback != null){
+                if (callback != null) {
                     callback();
                 }
                 return;
@@ -23,12 +23,16 @@ function waitForSocketConnection(socket, callback){
             } else {
                 websocket = new WebSocket(webSocketURL);
                 waitTime += 400;
-                $.UIkit.notify({
-                    message: "wait for connection "+waitTime/1000+" Seconds...",
-                    status: 'warning',
-                    timeout: waitTime,
-                    pos: 'top-center'
-                });
+                var messageContent = "Retry after " + waitTime / 1000 + " Seconds...";
+                if (!notifyObject) {
+                    notifyObject = $.UIkit.notify({
+                        message: messageContent,
+                        status: 'warning',
+                        timeout: 0,
+                        pos: 'top-center'
+                    });
+                }
+                notifyObject.content(messageContent);
                 waitForSocketConnection(websocket, callback);
             }
 
@@ -36,17 +40,33 @@ function waitForSocketConnection(socket, callback){
 }
 
 var webSocketOnOpen = function () {
-    $.UIkit.notify({
-        message: 'You Are Connectedto Map Server!!',
-        status: 'success',
-        timeout: ApplicationOptions.constance.NOTIFY_SUCCESS_TIMEOUT,
-        pos: 'top-center'
-    });
+
+    var message_content = 'connection restored successfully';
+    var message_status = 'success';
+
+    if (!notifyObject) {
+        notifyObject = $.UIkit.notify({
+            message: message_content,
+            status: message_status,
+            timeout: ApplicationOptions.constance.NOTIFY_SUCCESS_TIMEOUT,
+            pos: 'top-center'
+        });
+    }
+    else {
+        notifyObject.content(message_content);
+        notifyObject.status(message_status);
+        setTimeout(function () {
+            notifyObject.close();
+            notifyObject = null;
+        }, ApplicationOptions.constance.NOTIFY_SUCCESS_TIMEOUT);
+    }
+
 };
 
 var webSocketOnError = function (e) {
+    console.log('DEBUG: webSocketURL =' + webSocketURL);
     $.UIkit.notify({
-        message: 'Something went wrong when trying to connect to <b>'+webSocketURL+'<b/>',
+        message: ApplicationOptions.locale[ApplicationOptions.locale.type].websocket.errors.connection,
         status: 'danger',
         timeout: ApplicationOptions.constance.NOTIFY_DANGER_TIMEOUT,
         pos: 'top-center'
@@ -54,7 +74,7 @@ var webSocketOnError = function (e) {
 //    waitForSocketConnection(websocket);
 };
 
-var webSocketOnClose =function (e) {
+var webSocketOnClose = function (e) {
     $.UIkit.notify({
         message: 'Connection lost with server!!',
         status: 'danger',
@@ -78,7 +98,7 @@ var webSocketOnMessage = function processMessage(message) {
     }
 };
 
-function initializeWebSocket(){
+function initializeWebSocket() {
     websocket = new WebSocket(webSocketURL);
     websocket.onmessage = webSocketOnMessage;
     websocket.onclose = webSocketOnClose;
@@ -148,7 +168,8 @@ function SpatialObject(geoJSON) {
 }
 
 SpatialObject.prototype.createLineStringFeature = function (state, information, coordinates) {
-    return {"type": "Feature",
+    return {
+        "type": "Feature",
         "properties": {
             "state": state,
             "information": information
@@ -293,14 +314,14 @@ SpatialObject.prototype.update = function (geoJSON) {
     this.marker.setIconAngle(this.heading);
     this.marker.setIcon(this.stateIcon());
 
-    if(this.pathGeoJsons.length > 0){
+    if (this.pathGeoJsons.length > 0) {
         // To prevent conflicts in
         // Leaflet(http://leafletjs.com/reference.html#latlng) and geoJson standards(http://geojson.org/geojson-spec.html#id2),
         // have to do this swapping, but the resulting geoJson in not upto geoJson standards
         // TODO: write func to swap coordinates
         this.pathGeoJsons[this.pathGeoJsons.length - 1].geometry.coordinates.push([geoJSON.geometry.coordinates[1], geoJSON.geometry.coordinates[0]]);
     }
-    else{
+    else {
         newLineStringGeoJson = this.createLineStringFeature(this.state, this.information, [geoJSON.geometry.coordinates[1], geoJSON.geometry.coordinates[0]]);
         this.pathGeoJsons.push(newLineStringGeoJson);
     }
@@ -322,15 +343,6 @@ SpatialObject.prototype.update = function (geoJSON) {
 
 
 };
-
-function notifyAlert(message) {
-    $.UIkit.notify({
-        message: "Alert: " + message,
-        status: 'warning',
-        timeout: ApplicationOptions.constance.NOTIFY_WARNING_TIMEOUT,
-        pos: 'bottom-left'
-    });
-}
 
 function Alert(type, message, level) {
     this.type = type;
@@ -376,7 +388,7 @@ function LocalStorageArray(id) {
             updatedStorageValue = currentStorageValue + DELIMITER + value;
         }
         sessionStorage.setItem(this.storageId, updatedStorageValue);
-        this.length +=1;
+        this.length += 1;
     };
     this.isEmpty = function () {
         return (this.getArray().length === 0);

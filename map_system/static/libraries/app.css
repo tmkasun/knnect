@@ -151,3 +151,11 @@ input[type="radio"], input[type="checkbox"] {
   }
 }
 
+/*
+ * Message container for positioning
+ * Override to make in appear on top most layer
+ */
+.uk-notify {
+    z-index: 2000;
+}
+

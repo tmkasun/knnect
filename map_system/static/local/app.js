@@ -1,14 +1,5 @@
 /*Application configurations*/
 
-$(".modal").draggable({
-    handle: ".modal-header"
-});
-
-//Clear modal content for reuse the wrapper by other functions
-$('body').on('hidden.bs.modal', '.modal', function () {
-    $(this).removeData('bs.modal');
-});
-
 /**
  * Initialize leaflet map object
  * Set offcanvas menu hide when click on map layer by using 'map.on(click)' event tracer
@@ -166,6 +157,60 @@ function createChart() {
     });
 }
 
+/**
+ * Notify a message when an AJAX call is made to back end
+ * @param message {String} - message need to be displayed
+ */
+function notifyAlert(message, status) {
+    if (typeof status === 'undefined') {
+        status = 'warning';
+    }
+    return $.UIkit.notify({
+        message: "Alert: " + message,
+        status: status,
+        timeout: 0, // Show infinitely until close otherwise
+        pos: 'top-center'
+    });
+}
+
+/**
+ *
+ * @param message {String} - Message need to be displaying
+ * @param status {String} - $.Notify Status code { info, success ,warning ,danger }
+ *
+ */
+var ajaxNotifySettings = null;
+// TODO: Make an prototype and give available options list rather than hard typing them , who know what are there?
+function setAjaxNotify(message, status) {
+    if (typeof status === 'undefined') {
+        status = 'warning';
+    }
+    ajaxNotifySettings = {
+        'message': message,
+        'status': status
+    };
+}
+
+var ajaxNotifyObject;
+$(document).on({
+    ajaxStart: function () {
+        if (!ajaxNotifySettings) return;
+
+        ajaxNotifyObject = notifyAlert(ajaxNotifySettings['message'], ajaxNotifySettings['status']);
+
+    },
+    ajaxStop: function () {
+        if (!ajaxNotifyObject) return;
+
+        ajaxNotifyObject.status(ajaxNotifySettings['status']);
+        ajaxNotifyObject.content(ajaxNotifySettings['message']);
+        setTimeout(function () {
+            ajaxNotifyObject.close();
+            ajaxNotifyObject = null;
+            ajaxNotifySettings = null;
+        }, ApplicationOptions.constance.NOTIFY_INFO_TIMEOUT);
+    }
+});
 
 var map;
 initializeMap();
@@ -198,6 +243,7 @@ L.control.zoom({
     position: "bottomright"
 }).addTo(map);
 
+
 var groupedOverlays = {
     "Web Map Service layers": {}
 };
@@ -212,6 +258,17 @@ $(function () {
     var options = {submitUrl: "controllers/setup_dashboard.jag"};
     setupWizard = $("#setup_dashboard").wizard(options);
 });
+
+
+$(".modal").draggable({
+    handle: ".modal-header"
+});
+
+//Clear modal content for reuse the wrapper by other functions
+$('body').on('hidden.bs.modal', '.modal', function (modal) {
+    $(this).removeData('bs.modal');
+});
+
 
 /* TypeAhead search functionality */
 
