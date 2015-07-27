@@ -1,0 +1,78 @@
+<div id="left_side_pannel" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar" style="box-shadow: 3px 14px 13px -2px #8b8b8b;background: #ffffff">
+        <ul class="uk-nav uk-nav-offcanvas uk-nav-parent-icon" data-uk-nav>
+            <li class="uk-parent" style="box-shadow: 0 2px 12px 1px #cccdbd;min-height: 50px;line-height: 25px;">
+                <a href="#" style="min-height: 50px;">
+                    <span style="color: #d58512">WSO<sub style="font-size: medium;">2</sub></span> Geo Dashboard
+                </a>
+                <ul class="uk-nav-sub">
+                    <li style="color: #969490">
+                        Founded in August 2005, WSO2 is a global enterprise middleware corporation with offices in
+                        USA, UK and Sri Lanka.Providing the only complete<a style="color: #007171"
+                                                                            href="http://www.wso2.com">open
+                        source</a> middleware platform, WSO2 is revolutionizing the industry by putting traditional
+                        middleware on a diet and introducing lean, powerful and flexible solutions to address the
+                        21st century enterprise challenges.
+                    </li>
+
+                </ul>
+            </li>
+            <li class="uk-nav-header">Alerts</li>
+            <li class="uk-parent">
+                <a href="#"><i class="fa fa-pencil-square-o"></i> Set alerts</a>
+                <ul class="uk-nav-sub">
+                    <!-- Set speed limit -->
+                    <li>
+                        <a style="margin-left: 20%;" data-toggle="modal" href="{% url 'services:get_speed' %}"
+                           data-target="#commonModal"><i
+                                class="fa fa-tachometer"></i> Speed alert</a>
+                    </li>
+                    <li><a style="margin-left: 20%;" data-toggle="modal"
+                           href="{% url 'services:get_proximity' %}"
+                           data-target="#commonModal"><i class="fa fa-link"></i> Proximity alert</a></li>
+                    <li><a style="margin-left: 20%;" data-toggle="modal"
+                           href="{% url 'services:get_stationery' %}" data-target="#commonModal">
+                        <i class="fa fa-chain-broken"></i> Stationary alert</a></li>
+                </ul>
+            </li>
+
+
+            <!-- Set Geo-fence -->
+            <li class="uk-parent">
+                <a href="#"><i class="fa fa-filter"></i> Geo-fencing</a>
+                <ul class="uk-nav-sub">
+                    <li><a style="margin-left: 20%;" data-toggle="modal" href="{% url 'services:get_geofence' %}"
+                           data-target="#commonModal"><i class="fa fa-square-o"></i> Within</a></li>
+                    <li><a style="margin-left: 20%;color: grey;cursor: not-allowed;"><i
+                            class="fa fa-external-link-square"></i> Approaching</a></li>
+                    <li><a style="margin-left: 20%;color: grey;cursor: not-allowed;"><i class="fa fa-minus"></i>
+                        Cross</a></li>
+                </ul>
+            </li>
+
+            <!-- Settings section -->
+            <li class="uk-nav-header">Settings</li>
+            <!-- Add new tile server url -->
+            <li>
+                <a data-toggle="modal" data-target="#addTileServer"><i class="fa fa-plus"></i> Add tile server</a>
+            </li>
+            <!-- Add new WMS server url -->
+            <li>
+                <a data-toggle="modal" data-target="#addWmsUrl"><i class="fa fa-globe"></i> Add WMS end point</a>
+            </li>
+
+            <!-- Place holders need to remove or replace-->
+            <li class="uk-nav-header">
+                System Administrtion
+            </li>
+
+            <li>
+                <a onclick="setupWizard.show();return false;"><i style="color: #ff8905;" class="fa fa-cogs"></i>
+                    Setup
+                    Dashboard</a>
+            </li>
+        </ul>
+
+    </div>
+</div>
+
