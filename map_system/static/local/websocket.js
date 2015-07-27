@@ -41,7 +41,7 @@ function waitForSocketConnection(socket, callback) {
 
 var webSocketOnOpen = function () {
 
-    var message_content = 'connection restored successfully';
+    var message_content = 'connection made successfully';
     var message_status = 'success';
 
     if (!notifyObject) {
