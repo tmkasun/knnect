@@ -96,8 +96,8 @@ def geofence_alert(request):
 
 
 def set_geofence_alert(request):
-    queryName = 'geo_within_'+request.POST[
-        'queryName']+'_alert'  # TODO: Use this name to store the query in Database or remove this completly and use the area name only
+    queryName = 'geo_within_' + request.POST[
+        'queryName'] + '_alert'  # TODO: Use this name to store the query in Database or remove this completly and use the area name only
     areaName = request.POST['areaName']
     geoFenceGeoJSON = request.POST['geoFenceGeoJSON']
 
@@ -118,4 +118,8 @@ def set_geofence_alert(request):
 
 
 def get_stationery_alert(request):
+    raise Http404("Not implemented yet")
+
+
+def service_not_available(request):
     raise Http404("Not implemented yet")

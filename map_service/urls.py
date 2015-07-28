@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'set_geofence', views.set_geofence_alert, name='set_geofence'),
 
     url(r'stationery_alert', views.get_stationery_alert, name='get_stationery'),
+    url(r'.*',views.service_not_available, name='no_service')
 
 ]

@@ -3,18 +3,17 @@
         <ul class="uk-nav uk-nav-offcanvas uk-nav-parent-icon" data-uk-nav>
             <li class="uk-parent" style="box-shadow: 0 2px 12px 1px #cccdbd;min-height: 50px;line-height: 25px;">
                 <a href="#" style="min-height: 50px;">
-                    <span style="color: #d58512">WSO<sub style="font-size: medium;">2</sub></span> Geo Dashboard
+                    <span style="color: #3dc4d5">Knnect<sub style="font-size: medium;color:#ffaeea;"> smart</sub></span>
+                    Connect
                 </a>
                 <ul class="uk-nav-sub">
                     <li style="color: #969490">
-                        Founded in August 2005, WSO2 is a global enterprise middleware corporation with offices in
-                        USA, UK and Sri Lanka.Providing the only complete<a style="color: #007171"
-                                                                            href="http://www.wso2.com">open
-                        source</a> middleware platform, WSO2 is revolutionizing the industry by putting traditional
-                        middleware on a diet and introducing lean, powerful and flexible solutions to address the
-                        21st century enterprise challenges.
+                        Knnect connects things around you in a single click,In a nutshell,Knnect is a simple spatial
+                        object analyzing platform which was initially developed for vehicle and fleet management
+                        purpose.
+                        Knnect is an <a style="color: #007171" href="https://github.com/tmkasun/knnect">OpenSource</a>
+                        spatial object analyzing platform.
                     </li>
-
                 </ul>
             </li>
             <li class="uk-nav-header">Alerts</li>
@@ -35,8 +34,6 @@
                         <i class="fa fa-chain-broken"></i> Stationary alert</a></li>
                 </ul>
             </li>
-
-
             <!-- Set Geo-fence -->
             <li class="uk-parent">
                 <a href="#"><i class="fa fa-filter"></i> Geo-fencing</a>
@@ -50,8 +47,43 @@
                 </ul>
             </li>
 
+            <!-- Historical data section -->
+            <li class="uk-nav-header">Historical</li>
+            <li class="uk-parent">
+                <a href="#"><i class="fa fa-history"></i> Show history</a>
+                <ul class="uk-nav-sub">
+                    <!-- Set speed limit -->
+                    <li>
+                        <a style="margin-left: 20%;" data-toggle="modal" href="{% url 'services:no_service' %}"
+                           data-target="#commonModal"><i
+                                class="fa fa-ellipsis-h"></i> Recent history</a>
+                    </li>
+                    <li><a style="margin-left: 20%;" data-toggle="modal"
+                           href="{% url 'services:no_service' %}"
+                           data-target="#commonModal"><i class="fa fa-road"></i> Frequent paths</a></li>
+                    <li><a style="margin-left: 20%;" data-toggle="modal"
+                           href="{% url 'services:no_service' %}" data-target="#commonModal">
+                        <i class="fa fa-dot-circle-o"></i> Stoppages</a></li>
+                </ul>
+            </li>
+            <!-- Path Predictions -->
+            <li class="uk-parent">
+                <a href="#"><i class="fa fa-filter"></i> Path prediction</a>
+                <ul class="uk-nav-sub">
+                    <li><a style="margin-left: 20%;" data-toggle="modal" href="{% url 'services:no_service' %}"
+                           data-target="#commonModal"><i class="fa fa-code-fork"></i> Next best path</a></li>
+                    <li><a style="margin-left: 20%;color: grey;cursor: not-allowed;"><i
+                            class="fa fa-exclamation-triangle"></i> Wrong turns</a></li>
+                    <li><a style="margin-left: 20%;color: grey;cursor: not-allowed;"><i class="fa fa-eye"></i>
+                        Pass</a></li>
+                </ul>
+            </li>
+
             <!-- Settings section -->
             <li class="uk-nav-header">Settings</li>
+             <li>
+                <a data-toggle="modal" data-target="#addTileServer"><i class="fa fa-car"></i> Add new vehicle</a>
+            </li>
             <!-- Add new tile server url -->
             <li>
                 <a data-toggle="modal" data-target="#addTileServer"><i class="fa fa-plus"></i> Add tile server</a>
@@ -72,7 +104,6 @@
                     Dashboard</a>
             </li>
         </ul>
-
     </div>
 </div>
 
