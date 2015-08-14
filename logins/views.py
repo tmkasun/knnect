@@ -22,7 +22,7 @@ def submit(request):
     is_valid = _validate_user(user, password)
     if is_valid:
         return HttpResponseRedirect(reverse('maps:base'))
-    raise Http404('Page not created yet.')
+    raise Http404('Invalid username page not created yet.')
 
 
 def _validate_user(user, password):

@@ -31,6 +31,7 @@ Service ( EventProcessorAdminService ) tns="http://admin.processor.event.carbon.
 
 from map_service.lib.wso2.carbon_connect import AdminService
 from config.carbon import api
+from suds import WebFault
 
 
 def escapeXml(text):
@@ -55,7 +56,12 @@ class EventProcessor(object):
 
 
     def getActiveExecutionPlanConfiguration(self, name):
-        return self._carbon.client.service.getActiveExecutionPlanConfiguration(name)
+        try:
+            execution_plan = self._carbon.client.service.getActiveExecutionPlanConfiguration(name)
+        except WebFault:
+            execution_plan = None
+        return execution_plan
+
 
 
     def editActiveExecutionPlanConfiguration(self, new_execution_plan, name):

@@ -54,7 +54,13 @@ def set_speed_alert(request):
     alert_query = placeholder_pattern.sub(speed_limit, alert_template.read())
 
     evnt_proc = EventProcessor()
-    response = evnt_proc.editActiveExecutionPlanConfiguration(alert_query, 'geo_speed_alert')
+    exe_plan_name = 'geo_speed_alert'
+    exe_plan = evnt_proc.getActiveExecutionPlanConfiguration(exe_plan_name)
+    if exe_plan:
+        response = evnt_proc.editActiveExecutionPlanConfiguration(alert_query, exe_plan_name)
+    else:
+        response = evnt_proc.deployExecutionPlanConfigurationFromConfigXml(alert_query)
+
     return JsonResponse({'status': True})
 
 
