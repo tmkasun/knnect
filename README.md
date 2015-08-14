@@ -4,6 +4,6 @@ See `things` moving,
 Track `things` you like,
 Predict `things` movements,
 Simply it is a network of `things`
-  But what `things`, It can be any THING. 
-  People,Vehicles,Pets,Mobile Phones,Trains..... Even Airplanes.
+  `things` ?, It can be any THING. 
+  People,Vehicles,Pets,Mobile Phones,Trains,Flights......
 Give it a try.
