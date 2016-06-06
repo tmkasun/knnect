@@ -1,4 +1,7 @@
 ## Knnect
+(Don't get confused by `Language Details`, this is not a nodeJs app :anguished: :relaxed: It's a Django Project :relieved: 
+Need to cleanup uncompressed js libs
+)
 Connect `things` together,
 See `things` moving,
 Track `things` you like,
