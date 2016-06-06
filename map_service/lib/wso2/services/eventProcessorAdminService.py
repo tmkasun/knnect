@@ -1,4 +1,5 @@
 __author__ = 'tmkasun'
+
 """
 Service ( EventProcessorAdminService ) tns="http://admin.processor.event.carbon.wso2.org"
       (EventProcessorAdminServiceHttpsSoap11Endpoint)
@@ -28,7 +29,6 @@ Service ( EventProcessorAdminService ) tns="http://admin.processor.event.carbon.
             ns2:StreamConfigurationDto
             ns2:StreamDefinitionDto
 """
-
 from map_service.lib.wso2.carbon_connect import AdminService
 from config.carbon import api
 from suds import WebFault
@@ -54,15 +54,12 @@ class EventProcessor(object):
         self._carbon.connect()
         self._carbon.client.set_options(port='EventProcessorAdminServiceHttpsSoap11Endpoint')
 
-
     def getActiveExecutionPlanConfiguration(self, name):
         try:
             execution_plan = self._carbon.client.service.getActiveExecutionPlanConfiguration(name)
         except WebFault:
             execution_plan = None
         return execution_plan
-
-
 
     def editActiveExecutionPlanConfiguration(self, new_execution_plan, name):
         escaped_xml = escapeXml(new_execution_plan)
