@@ -11,7 +11,7 @@ Give it a try.
 ## This product depends on the following libraries
 
 1. https://bitbucket.org/jurko/suds
-
+2. Django
 ## Screenshots
 
 ![knnect_login_page](https://cloud.githubusercontent.com/assets/3313885/15811810/ee1b603a-2bca-11e6-9f10-7d7456d7690b.png)
