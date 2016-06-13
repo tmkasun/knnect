@@ -10,11 +10,14 @@ Simply it is a network of `things`
   `things` ?, It can be any THING. 
   People,Vehicles,Pets,Mobile Phones,Trains,Flights......
 Give it a try.
+GPS Vehicle tracking , Object Tracking, Indoor map support, Fuel monitoring (With supported devices)
 
 ## This product depends on the following libraries
 
 1. https://bitbucket.org/jurko/suds
 2. Django
+## Extensibility
+## Available APIs
 ## Screenshots
 
 ![knnect_login_page](https://cloud.githubusercontent.com/assets/3313885/15811810/ee1b603a-2bca-11e6-9f10-7d7456d7690b.png)
