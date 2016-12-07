@@ -85,6 +85,7 @@ var webSocketOnClose = function (e) {
 };
 
 var webSocketOnMessage = function processMessage(message) {
+    debugger;
     var geoJsonFeature = $.parseJSON(message.data);
     if (geoJsonFeature.id in currentSpatialObjects) {
         var excitingObject = currentSpatialObjects[geoJsonFeature.id];

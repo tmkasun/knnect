@@ -87,7 +87,7 @@
     <!-- Self javascript libraries (Order of the import is very important, changing the order might shadow some variables, append new script to bottom ) -->
     <script src="{% static 'local/application_options.js' %}"></script>
     <script>
-        var webSocketURL = 'ws://' + ApplicationOptions.constance.WEB_SOCKET_SERVER + ':' + ApplicationOptions.constance.WEB_SOCKET_PORT + '/outputwebsocket/t/' + '{{ "carbon.super" }}' + '/' + ApplicationOptions.constance.CEP_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + '/' + ApplicationOptions.constance.CEP_WEB_SOCKET_BUILDER_TOPIC; // TODO: Get the server IP and port and other static information from the applicationOptions object
+        var webSocketURL = "ws://localhost:9080/ws/data";//'ws://' + ApplicationOptions.constance.WEB_SOCKET_SERVER + ':' + ApplicationOptions.constance.WEB_SOCKET_PORT + '/outputwebsocket/t/' + '{{ "carbon.super" }}' + '/' + ApplicationOptions.constance.CEP_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + '/' + ApplicationOptions.constance.CEP_WEB_SOCKET_BUILDER_TOPIC; // TODO: Get the server IP and port and other static information from the applicationOptions object
         ApplicationOptions.constance.WEB_SOCKET_URL = webSocketURL;
         ApplicationOptions.constance.STATIC_URL = "{% static '' %}";
 

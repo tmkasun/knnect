@@ -41,6 +41,6 @@ urlpatterns = [
     url(r'^map_system/', include('map_system.urls', namespace='maps')),
     url(r'^map_service/', include('map_service.urls', namespace='services')),
     url(r'^apis/', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^$', 'logins.views.login', name='default')
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    # url(r'^$', 'logins.views.login', name='default')
 ]
