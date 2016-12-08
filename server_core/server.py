@@ -20,6 +20,7 @@ class StatusHandler(WebSocketHandler):
 
     def on_close(self):
         print ("Closed new web socket connection")
+        StatusHandler.connections.remove(self)
 
     def on_message(self, message):
         self.write_message(u"You said: " + message)

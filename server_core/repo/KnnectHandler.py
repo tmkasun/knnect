@@ -18,10 +18,9 @@ logger = logging.getLogger(__name__)
 
 
 class KnnectHandler(TCPServer):
-
     def __init__(self, ws_handler):
         super(KnnectHandler, self).__init__()
-        self.ws_connections = ws_handler
+        self.ws_handler = ws_handler
 
     @gen.coroutine
     def handle_stream(self, stream, address):
@@ -35,8 +34,10 @@ class KnnectHandler(TCPServer):
                 start = data_list.index('GPRMC')
                 if start:
                     gprmc = ",".join(data_list[start:15])
-                    data = pynmea2.parse()
-                    g_point = geojson.Point((data.latitude,data.longitude))
+                    data = pynmea2.parse(gprmc)
+                    g_point = geojson.Point((data.latitude, data.longitude))
+                    self.ws_handler.connections[3].write_message(g_point)
+                    [client.write_message(g_point) for client in self.ws_handler.connections]
 
             except StreamClosedError:
                 logger.warning("Lost client at host %s", address[0])
