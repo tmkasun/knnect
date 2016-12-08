@@ -12,13 +12,12 @@
 
     {% load staticfiles %}
 
-    <link rel=" apple-touch-icon
-    " sizes="76x76" href="{% static 'images/favicon-76.png' %}"/>
-    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'images/favicon-120.png' %}"/>
-    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'images/favicon-152.png' %}"/>
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'map_system/images/favicon-76.png' %}"/>
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'map_system/images/favicon-120.png' %}"/>
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'map_system/images/favicon-152.png' %}"/>
 
-    <link rel="icon" sizes="196x196" href="{% static 'images/favicon-196.png' %}">
-    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="icon" sizes="196x196" href="{% static 'map_system/images/favicon-196.png' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'map_system/images/favicon.ico' %}">
 
     <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
     {#    Load Bootstrap from common knnector static files #}
@@ -31,26 +30,26 @@
     <!-- Leaflet styles -->
     {#    TODO: Have use Leaflet Beta relese 1.0 , Replace with latest production version when available(JS only) #}
     {#    TODO: leaflet.css is used from older geo-dashboard app , since latest one gives errors (markers are not visible with leaflet new CSS), replace or fix it #}
-    <link rel="stylesheet" href="{% static 'libraries/leaflet/leaflet.css' %}"/>
-    <script src="{% static 'libraries/leaflet/leaflet-src.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'map_system/libraries/leaflet/leaflet.css' %}"/>
+    <script src="{% static 'map_system/libraries/leaflet/leaflet-src.js' %}"></script>
 
-    <link rel="stylesheet" href="{% static 'libraries/leaflet/locatecontrol-0.43.0/dist/L.Control.Locate.css' %}"/>
-    <script src="{% static 'libraries/leaflet/locatecontrol-0.43.0/dist/L.Control.Locate.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'map_system/libraries/leaflet/locatecontrol/bin/L.Control.Locate.css' %}"/>
+    <script src="{% static 'map_system/libraries/leaflet/locatecontrol/bin/L.Control.Locate.min.js' %}"></script>
 
-    <link rel="stylesheet" href="{% static 'libraries/leaflet/markercluster-0.4.0/dist/MarkerCluster.css' %}"/>
-    <script src="{% static 'libraries/leaflet/markercluster-0.4.0/dist/leaflet.markercluster.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'map_system/libraries/leaflet/markercluster/bin/MarkerCluster.css' %}"/>
+    <script src="{% static 'map_system/libraries/leaflet/markercluster/bin/leaflet.markercluster.js' %}"></script>
 
-    <link rel="stylesheet" href="{% static 'libraries/leaflet/fullscreen-0.0.4/dist/leaflet.fullscreen.css' %}"/>
-    <script src="{% static 'libraries/leaflet/fullscreen-0.0.4/dist/Leaflet.fullscreen.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'map_system/libraries/leaflet/fullscreen/bin/Control.FullScreen.css' %}"/>
+    <script src="{% static 'map_system/libraries/leaflet/fullscreen/bin/Control.FullScreen.js' %}"></script>
 
-    <link rel="stylesheet" href="{% static 'libraries/leaflet/draw-0.2.4/dist/leaflet.draw.css' %}"/>
-    <script src="{% static 'libraries/leaflet/draw-0.2.4/dist/leaflet.draw.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'map_system/libraries/leaflet/draw/bin/leaflet.draw.css' %}"/>
+    <script src="{% static 'map_system/libraries/leaflet/draw/bin/leaflet.draw.js' %}"></script>
 
     <link rel="stylesheet"
-          href="{% static 'libraries/leaflet/groupedlayercontrol-0.3.1/dist/leaflet.groupedlayercontrol.min.css' %}"/>
-    <script src="{% static 'libraries/leaflet/groupedlayercontrol-0.3.1/dist/leaflet.groupedlayercontrol.min.js' %}"></script>
+          href="{% static 'map_system/libraries/leaflet/groupedlayercontrol/bin/leaflet.groupedlayercontrol.min.css' %}"/>
+    <script src="{% static 'map_system/libraries/leaflet/groupedlayercontrol/bin/leaflet.groupedlayercontrol.min.js' %}"></script>
 
-    <script src="{% static 'libraries/leaflet/plugins-1.3.9/layer/Marker.Rotate.js' %}"></script>
+    <script src="{% static 'map_system/libraries/leaflet/plugins-1.3.9/layer/Marker.Rotate.js' %}"></script>
 
 
     <link rel="stylesheet" href="{% static 'uikit/css/uikit.min.css' %}"/>
@@ -67,41 +66,41 @@
 
 
     <!--bootstrap-application-wizard-->
-    <link rel="stylesheet" href="{% static 'libraries/bootstrap-wizard/bootstrap-wizard.css' %}">
-    <script src="{% static 'libraries/bootstrap-wizard/bootstrap-wizard.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'map_system/libraries/bootstrap-wizard/bootstrap-wizard.css' %}">
+    <script src="{% static 'map_system/libraries/bootstrap-wizard/bootstrap-wizard.min.js' %}"></script>
 
     <!--TODO: use http://requirejs.org/ for better performance, now we have too many imports  -->
     <!-- C3 chart library styles-->
-    <link rel="stylesheet" href="{% static 'libraries/c3/c3.min.css' %}">
-    <script src="{% static 'libraries/d3/d3.min.js' %}" charset="utf-8"></script>
-    <script src="{% static 'libraries/c3/c3.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'map_system/libraries/c3/c3.min.css' %}">
+    <script src="{% static 'map_system/libraries/d3/d3.min.js' %}" charset="utf-8"></script>
+    <script src="{% static 'map_system/libraries/c3/c3.min.js' %}"></script>
 
 
     <!-- TODO: for reference <Update lib or remove if not in use>: This `R`(RaphaelLayer: https://github.com/dynmeth/RaphaelLayer) library is dam buggy can't use it reliably -->
     <!--<script src="assets/js/leaflet/rlayer.js"></script>-->
     <!--<script src="assets/js/leaflet/raphael-min.js"></script>-->
 
-    <script src="{% static 'libraries/typeahead/typeahead.bundle.js' %}"></script>
+    <script src="{% static 'map_system/libraries/typeahead/typeahead.bundle.js' %}"></script>
 
 
     <!-- Self javascript libraries (Order of the import is very important, changing the order might shadow some variables, append new script to bottom ) -->
-    <script src="{% static 'local/application_options.js' %}"></script>
+    <script src="{% static 'map_system/local/application_options.js' %}"></script>
     <script>
         var webSocketURL = "ws://localhost:9080/ws/data";//'ws://' + ApplicationOptions.constance.WEB_SOCKET_SERVER + ':' + ApplicationOptions.constance.WEB_SOCKET_PORT + '/outputwebsocket/t/' + '{{ "carbon.super" }}' + '/' + ApplicationOptions.constance.CEP_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + '/' + ApplicationOptions.constance.CEP_WEB_SOCKET_BUILDER_TOPIC; // TODO: Get the server IP and port and other static information from the applicationOptions object
         ApplicationOptions.constance.WEB_SOCKET_URL = webSocketURL;
         ApplicationOptions.constance.STATIC_URL = "{% static '' %}";
 
     </script>
-     <link rel="stylesheet" href="{% static 'libraries/app.css' %}">
+     <link rel="stylesheet" href="{% static 'map_system/libraries/app.css' %}">
 
-    <script src="{% static 'local/websocket.js' %}"></script>
-    <script src="{% static 'local/geo_remote.js' %}"></script>
-    <script src="{% static 'local/geo_fencing.js' %}"></script>
-    <script src="{% static 'local/show_alert_in_map.js' %}"></script>
-    <script src="{% static 'local/ajax_csrf_protect.js' %}"></script>
+    <script src="{% static 'map_system/local/websocket.js' %}"></script>
+    <script src="{% static 'map_system/local/geo_remote.js' %}"></script>
+    <script src="{% static 'map_system/local/geo_fencing.js' %}"></script>
+    <script src="{% static 'map_system/local/show_alert_in_map.js' %}"></script>
+    <script src="{% static 'map_system/local/ajax_csrf_protect.js' %}"></script>
 
     <!-- Combined and compiled JS with google closure compile-->
-    <!--<script src="{% static 'local/application_options.js' %}"></script>-->
+    <!--<script src="{% static 'map_system/local/application_options.js' %}"></script>-->
 
     <style>
         /*
