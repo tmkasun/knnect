@@ -12,7 +12,7 @@ var ApplicationOptions = {
         }
     },
     constance:{
-        WEB_SOCKET_URL: "ws://track.knnect.com:9080/ws/data",
+        WEB_SOCKET_URL: "ws://geo.knnect.com:9080/ws/data",
         WEB_SOCKET_SERVER: 'aws4.knnect.com', /*TODO: Deprecated */
         WEB_SOCKET_PORT: 9764, /*TODO: Deprecated */
         CEP_WEB_SOCKET_OUTPUT_ADAPTOR_NAME: 'DefaultWebsocketOutputAdaptor', /*TODO: Deprecated */
