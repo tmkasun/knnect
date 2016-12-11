@@ -4,7 +4,7 @@ from tornado.iostream import StreamClosedError, IOStream
 from tornado.tcpserver import TCPServer
 import csv
 import pynmea2
-import geojson
+import geojson # Docs https://pypi.python.org/pypi/geojson
 from shapely.geometry import Point
 
 # https://github.com/Knio/pynmea2
@@ -35,9 +35,11 @@ class KnnectHandler(TCPServer):
                 if start:
                     gprmc = ",".join(data_list[start:15])
                     data = pynmea2.parse(gprmc)
-                    g_point = geojson.Point((data.latitude, data.longitude))
-                    self.ws_handler.connections[3].write_message(g_point)
-                    [client.write_message(g_point) for client in self.ws_handler.connections]
+                    g_point = geojson.Point((data.longitude, data.latitude))
+                    imei = data_list[16].split(':')[1]
+                    g_feature = geojson.Feature(geometry=g_point, id=imei)
+                    # self.ws_handler.connections[3].write_message(g_point)
+                    [client.write_message(g_feature) for client in self.ws_handler.connections]
 
             except StreamClosedError:
                 logger.warning("Lost client at host %s", address[0])

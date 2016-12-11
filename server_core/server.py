@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 
 import logging
+
+import time
 from tornado.ioloop import IOLoop
 from tornado.options import options, define
 from tornado.websocket import WebSocketHandler
@@ -11,6 +13,9 @@ from repo.KnnectHandler import KnnectHandler
 
 
 # http://tornadogists.com/532067/
+from repo.utils import startupAnimation
+
+
 class StatusHandler(WebSocketHandler):
     connections = []
 
@@ -41,7 +46,13 @@ class Application(web.Application):
 
 logger = logging.getLogger(__name__)
 
-if __name__ == "__main__":
+
+# ===============================================================================
+# Standard boilerplate to call the main() function to begin the program.
+# ===============================================================================
+
+def main():
+    startupAnimation()
     define("tcp_port", default=9090, help="TCP port to listen on")
     define("ws_port", default=9080, help="Websocket port to listen on")
     options.parse_command_line()
@@ -56,3 +67,7 @@ if __name__ == "__main__":
     server = HTTPServer(app)
     server.listen(options.ws_port)
     IOLoop.instance().start()
+
+
+if __name__ == "__main__":
+    main()

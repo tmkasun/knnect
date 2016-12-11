@@ -33,12 +33,12 @@ var ApplicationOptions = {
     },
     leaflet: {
         iconUrls: {
-            normalIcon: '/static/images/markers/arrow_normal.png',
-            alertedIcon: '/static/images/markers/arrow_alerted.png',
-            offlineIcon: '/static/images/markers/arrow_offline.png',
-            warningIcon: '/static/images/markers/arrow_warning.png',
-            defaultIcon: '/static/images/markers/default_icons/marker-icon.png',
-            resizeIcon: '/static/images/markers/resize.png'
+            normalIcon: '/static/map_system/images/markers/arrow_normal.png',
+            alertedIcon: '/static/map_system/images/markers/arrow_alerted.png',
+            offlineIcon: '/static/map_system/images/markers/arrow_offline.png',
+            warningIcon: '/static/map_system/images/markers/arrow_warning.png',
+            defaultIcon: '/static/map_system/images/markers/default_icons/marker-icon.png',
+            resizeIcon: '/static/map_system/images/markers/resize.png'
 
         }
     },
