@@ -63,8 +63,7 @@ def main():
     logger.info("Connections open for web sockets on port %d", options.ws_port)
     # IOLoop.current().start()
 
-    app = Application()
-    server = HTTPServer(app)
+    server = HTTPServer(Application())
     server.listen(options.ws_port)
     IOLoop.instance().start()
 

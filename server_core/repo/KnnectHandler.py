@@ -4,8 +4,10 @@ from tornado.iostream import StreamClosedError, IOStream
 from tornado.tcpserver import TCPServer
 import csv
 import pynmea2
-import geojson # Docs https://pypi.python.org/pypi/geojson
+import geojson  # Docs https://pypi.python.org/pypi/geojson
 from shapely.geometry import Point
+import motor
+from motor.motor_tornado import MotorClient
 
 # https://github.com/Knio/pynmea2
 # https://www.safaribooksonline.com/library/view/introduction-to-tornado/9781449312787/ch05s03.html
@@ -21,15 +23,17 @@ class KnnectHandler(TCPServer):
     def __init__(self, ws_handler):
         super(KnnectHandler, self).__init__()
         self.ws_handler = ws_handler
+        self.db = MotorClient().knnect
 
     @gen.coroutine
     def handle_stream(self, stream, address):
         while True:
             try:
                 data = yield stream.read_until(b"\n")
-                logger.info("Received bytes: %s", data)
                 if not data.endswith(b"\n"):
                     data += b"\n"
+                logger.info("Received bytes: %s", data)
+                self.save(data)
                 data_list = list(csv.reader([data])).pop()
                 start = data_list.index('GPRMC')
                 if start:
@@ -46,3 +50,8 @@ class KnnectHandler(TCPServer):
                 break
             except Exception as e:
                 print(e)
+
+    @gen.coroutine
+    def save(self, data):
+        result = yield self.db.messages.insert_one({'raw': data})
+        print(result)
