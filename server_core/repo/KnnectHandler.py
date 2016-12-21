@@ -1,4 +1,6 @@
 import logging
+
+from pymongo.results import InsertOneResult
 from tornado import gen
 from tornado.iostream import StreamClosedError, IOStream
 from tornado.tcpserver import TCPServer
@@ -54,4 +56,4 @@ class KnnectHandler(TCPServer):
     @gen.coroutine
     def save(self, data):
         result = yield self.db.messages.insert_one({'raw': data})
-        print(result)
+        logger.info("Saved with id = {}".format(result.inserted_id))
