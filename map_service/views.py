@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render
 
-from lib.wso2.services.eventProcessorAdminService import EventProcessor
+# from lib.wso2.services.eventProcessorAdminService import EventProcessor
 import os
 import re
 
@@ -20,23 +20,22 @@ def proximity_alert(request):
     }
     return render(request, 'map_service/alerts/proximity.html', context=context)
 
-
-def set_proximity_alert(request):
-    evnt_proc = EventProcessor()
-    proximity_distance = request.POST['proximityDistance']
-    proximity_time = request.POST['proximityTime']
-    alert_template = open(
-        os.path.join(BASE_DIR, 'map_service/templates/map_service/xml/geo_proximity_alert.xml')).read()
-
-    time_placeholder = re.compile(r'\$proximityTime')
-    alert_query = time_placeholder.sub(proximity_time, alert_template)
-
-    distance_placeholder = re.compile(r'\$proximityDistance')
-    alert_query = distance_placeholder.sub(proximity_distance, alert_query)
-
-    # TODO: Check why the response is {None} object
-    response = evnt_proc.editActiveExecutionPlanConfiguration(alert_query, 'geo_proximity_alert')
-    return JsonResponse({'status': True})
+# def set_proximity_alert(request):
+#     evnt_proc = EventProcessor()
+#     proximity_distance = request.POST['proximityDistance']
+#     proximity_time = request.POST['proximityTime']
+#     alert_template = open(
+#         os.path.join(BASE_DIR, 'map_service/templates/map_service/xml/geo_proximity_alert.xml')).read()
+#
+#     time_placeholder = re.compile(r'\$proximityTime')
+#     alert_query = time_placeholder.sub(proximity_time, alert_template)
+#
+#     distance_placeholder = re.compile(r'\$proximityDistance')
+#     alert_query = distance_placeholder.sub(proximity_distance, alert_query)
+#
+#     # TODO: Check why the response is {None} object
+#     response = evnt_proc.editActiveExecutionPlanConfiguration(alert_query, 'geo_proximity_alert')
+#     return JsonResponse({'status': True})
 
 
 def get_speed_alert(request):
@@ -47,21 +46,21 @@ def get_speed_alert(request):
     return render(request, 'map_service/alerts/speed.html', context=context)
 
 
-def set_speed_alert(request):
-    speed_limit = request.POST['speedAlertValue']
-    alert_template = open(os.path.join(BASE_DIR, 'map_service/templates/map_service/xml/geo_speed_alert.xml'))
-    placeholder_pattern = re.compile(r'\$speedAlertValue')
-    alert_query = placeholder_pattern.sub(speed_limit, alert_template.read())
-
-    evnt_proc = EventProcessor()
-    exe_plan_name = 'geo_speed_alert'
-    exe_plan = evnt_proc.getActiveExecutionPlanConfiguration(exe_plan_name)
-    if exe_plan:
-        response = evnt_proc.editActiveExecutionPlanConfiguration(alert_query, exe_plan_name)
-    else:
-        response = evnt_proc.deployExecutionPlanConfigurationFromConfigXml(alert_query)
-
-    return JsonResponse({'status': True})
+# def set_speed_alert(request):
+#     speed_limit = request.POST['speedAlertValue']
+#     alert_template = open(os.path.join(BASE_DIR, 'map_service/templates/map_service/xml/geo_speed_alert.xml'))
+#     placeholder_pattern = re.compile(r'\$speedAlertValue')
+#     alert_query = placeholder_pattern.sub(speed_limit, alert_template.read())
+#
+#     evnt_proc = EventProcessor()
+#     exe_plan_name = 'geo_speed_alert'
+#     exe_plan = evnt_proc.getActiveExecutionPlanConfiguration(exe_plan_name)
+#     if exe_plan:
+#         response = evnt_proc.editActiveExecutionPlanConfiguration(alert_query, exe_plan_name)
+#     else:
+#         response = evnt_proc.deployExecutionPlanConfigurationFromConfigXml(alert_query)
+#
+#     return JsonResponse({'status': True})
 
 
 def geofence_alert(request):
@@ -101,26 +100,26 @@ def geofence_alert(request):
     return render(request, 'map_service/alerts/within.html', context=context)
 
 
-def set_geofence_alert(request):
-    queryName = 'geo_within_' + request.POST[
-        'queryName'] + '_alert'  # TODO: Use this name to store the query in Database or remove this completly and use the area name only
-    areaName = request.POST['areaName']
-    geoFenceGeoJSON = request.POST['geoFenceGeoJSON']
-
-    alert_template = open(os.path.join(BASE_DIR, 'map_service/templates/map_service/xml/geo_within_alert.xml'))
-    placeholder_pattern = re.compile(r'\$areaName')
-    alert_query = placeholder_pattern.sub(areaName, alert_template.read())
-
-    placeholder_pattern = re.compile(r'\$geoFenceGeoJSON')
-    alert_query = placeholder_pattern.sub(geoFenceGeoJSON, alert_query)
-
-    placeholder_pattern = re.compile(r'\$executionPlanName')
-    alert_query = placeholder_pattern.sub(queryName, alert_query)
-
-    evnt_proc = EventProcessor()
-    evnt_proc.deployExecutionPlanConfigurationFromConfigXml(alert_query)
-
-    return JsonResponse({'status': True})
+# def set_geofence_alert(request):
+#     queryName = 'geo_within_' + request.POST[
+#         'queryName'] + '_alert'  # TODO: Use this name to store the query in Database or remove this completly and use the area name only
+#     areaName = request.POST['areaName']
+#     geoFenceGeoJSON = request.POST['geoFenceGeoJSON']
+#
+#     alert_template = open(os.path.join(BASE_DIR, 'map_service/templates/map_service/xml/geo_within_alert.xml'))
+#     placeholder_pattern = re.compile(r'\$areaName')
+#     alert_query = placeholder_pattern.sub(areaName, alert_template.read())
+#
+#     placeholder_pattern = re.compile(r'\$geoFenceGeoJSON')
+#     alert_query = placeholder_pattern.sub(geoFenceGeoJSON, alert_query)
+#
+#     placeholder_pattern = re.compile(r'\$executionPlanName')
+#     alert_query = placeholder_pattern.sub(queryName, alert_query)
+#
+#     evnt_proc = EventProcessor()
+#     evnt_proc.deployExecutionPlanConfigurationFromConfigXml(alert_query)
+#
+#     return JsonResponse({'status': True})
 
 
 def get_stationery_alert(request):
