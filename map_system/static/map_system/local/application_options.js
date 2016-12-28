@@ -38,7 +38,7 @@ var ApplicationOptions = {
             alertedIcon: '/static/map_system/images/markers/arrow_alerted.png',
             offlineIcon: '/static/map_system/images/markers/arrow_offline.png',
             warningIcon: '/static/map_system/images/markers/arrow_warning.png',
-            defaultIcon: '/static/map_system/images/markers/default_icons/marker-icon.png',
+            defaultIcon: '/static/map_system/images/markers/car/red-top.png',
             resizeIcon: '/static/map_system/images/markers/resize.png'
 
         }

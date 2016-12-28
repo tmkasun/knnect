@@ -137,7 +137,7 @@ var warningIcon = L.icon({
 });
 var defaultIcon = L.icon({
     iconUrl: ApplicationOptions.leaflet.iconUrls.defaultIcon,
-    iconSize: [24, 24],
+    iconSize: [36, 36],
     iconAnchor: [+12, +12],
     popupAnchor: [-2, -5]
 });

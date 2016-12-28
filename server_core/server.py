@@ -28,7 +28,7 @@ class StatusHandler(WebSocketHandler):
         StatusHandler.connections.remove(self)
 
     def on_message(self, message):
-        self.write_message(u"You said: " + message)
+        yield self.write_message(u"You said: " + message)
 
     def check_origin(self, origin):
         return True
