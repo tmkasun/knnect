@@ -20,7 +20,7 @@ from motor.motor_tornado import MotorClient
 
 logger = logging.getLogger(__name__)
 
-
+handlers = []
 class KnnectHandler(TCPServer):
     def __init__(self, ws_handler):
         super(KnnectHandler, self).__init__()
@@ -31,6 +31,9 @@ class KnnectHandler(TCPServer):
     def handle_stream(self, stream, address):
         while True:
             try:
+                interGeoJson = handler_in.process()
+                for handler in handlers:
+                    yield handler(interGeoJson)
                 data = yield stream.read_until(b"\n")
                 if not data.endswith(b"\n"):
                     data += b"\n"
