@@ -17,7 +17,7 @@ def submit(request):
     user = request.POST['user_email']
     password = request.POST['user_password']
     remember = False
-    if request.POST.has_key('user_remember') and request.POST['user_remember'] == 'True':
+    if 'user_remember' in request.POST and request.POST['user_remember'] is 'True':
         remember = True
     is_valid = _validate_user(user, password)
     if is_valid:
@@ -26,8 +26,9 @@ def submit(request):
 
 
 def _validate_user(user, password):
-    if user == 'kasun@knnect.com' and password == 'kasun':
-        return True
-    return False
+    # if user == 'kasun@knnect.com' and password == 'kasun':
+    #     return True
+    # TODO: Experimental allow any user ~tmkasun
+    return True
 
 
