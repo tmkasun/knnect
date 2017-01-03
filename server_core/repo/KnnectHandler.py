@@ -31,9 +31,9 @@ class KnnectHandler(TCPServer):
     def handle_stream(self, stream, address):
         while True:
             try:
-                interGeoJson = handler_in.process()
-                for handler in handlers:
-                    yield handler(interGeoJson)
+                # interGeoJson = handler_in.process()
+                # for handler in handlers:
+                #     yield handler(interGeoJson)
                 data = yield stream.read_until(b"\n")
                 if not data.endswith(b"\n"):
                     data += b"\n"
@@ -46,7 +46,12 @@ class KnnectHandler(TCPServer):
                     data = pynmea2.parse(gprmc)
                     g_point = geojson.Point((data.longitude, data.latitude))
                     imei = data_list[16].split(':')[1]
-                    g_feature = geojson.Feature(geometry=g_point, id=imei)
+                    g_properties = {
+                        'heading': data.true_course,
+                        'speed': data.spd_over_grnd,
+                        'state': data.status
+                    }
+                    g_feature = geojson.Feature(geometry=g_point, id=imei, properties=g_properties)
                     # self.ws_handler.connections[3].write_message(g_point)
                     [client.write_message(g_feature) for client in self.ws_handler.connections]
 

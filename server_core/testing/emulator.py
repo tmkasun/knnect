@@ -14,11 +14,11 @@ def setup(reader):
     while True:
         data = reader.next()
         yield stream.write(b"{}".format(data[0]))
-        yield gen.sleep(0.5)
+        yield gen.sleep(0.1)
 
 
 def main():
-    fd = open('/home/tmkasun/Documents/pvt/github/knnect/server_core/testing/sample.csv', 'r')
+    fd = open('/home/tmkasun/Documents/pvt/github/knnect/server_core/testing/sample2.csv', 'r')
     reader = csv.reader(fd)
     setup(reader)
     IOLoop.current().start()
