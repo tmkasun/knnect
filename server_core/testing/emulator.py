@@ -14,7 +14,7 @@ def setup(reader):
     while True:
         data = reader.next()
         yield stream.write(b"{}".format(data[0]))
-        yield gen.sleep(0.1)
+        yield gen.sleep(0.3)
 
 
 def main():

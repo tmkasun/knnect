@@ -10,6 +10,7 @@ import geojson  # Docs https://pypi.python.org/pypi/geojson
 from shapely.geometry import Point
 import motor
 from motor.motor_tornado import MotorClient
+from tornado.web import RequestHandler
 
 # https://github.com/Knio/pynmea2
 # https://www.safaribooksonline.com/library/view/introduction-to-tornado/9781449312787/ch05s03.html
@@ -21,6 +22,8 @@ from motor.motor_tornado import MotorClient
 logger = logging.getLogger(__name__)
 
 handlers = []
+
+
 class KnnectHandler(TCPServer):
     def __init__(self, ws_handler):
         super(KnnectHandler, self).__init__()
@@ -49,14 +52,15 @@ class KnnectHandler(TCPServer):
                     g_properties = {
                         'heading': data.true_course,
                         'speed': data.spd_over_grnd,
-                        'state': data.status
+                        'state': "NORMAL"
                     }
                     g_feature = geojson.Feature(geometry=g_point, id=imei, properties=g_properties)
                     # self.ws_handler.connections[3].write_message(g_point)
-                    [client.write_message(g_feature) for client in self.ws_handler.connections]
-
+                    self.notifyClients(g_feature)
             except StreamClosedError:
                 logger.warning("Lost client at host %s", address[0])
+                g_feature['properties']['state'] = 'OFFLINE'
+                self.notifyClients(g_feature)
                 break
             except Exception as e:
                 print(e)
@@ -65,3 +69,6 @@ class KnnectHandler(TCPServer):
     def save(self, data):
         result = yield self.db.messages.insert_one({'raw': data})
         logger.info("Saved with id = {}".format(result.inserted_id))
+
+    def notifyClients(self, message):
+        [client.write_message(message) for client in self.ws_handler.connections]
