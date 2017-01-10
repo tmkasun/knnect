@@ -1,3 +1,7 @@
-from django.db import models
+from mongoengine import Document, EmbeddedDocument, fields
 
-# Create your models here.
+
+class LkState(Document):
+    object_id = fields.StringField(required=True)
+    status = fields.StringField(required=True)
+    lk_geo_feature = fields.PointField()

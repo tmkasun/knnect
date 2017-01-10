@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import mongoengine
+
+mongoengine.connect('knnect')
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -41,7 +44,8 @@ INSTALLED_APPS = (
     'map_system',
     'map_service',
     'rest_framework',
-    'rest_framework_swagger'
+    'rest_framework_swagger',
+    'rest_framework_mongoengine'
 )
 
 MIDDLEWARE_CLASSES = (
