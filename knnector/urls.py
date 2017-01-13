@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^authenticate/', include('logins.urls', namespace='logins')),
     url(r'^map_system/', include('map_system.urls', namespace='maps')),
-    url(r'^api/', include('map_service.urls', namespace='apis')),
+    url(r'^apis/', include('map_service.urls', namespace='apis')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^$', include('logins.urls', namespace='default'))
 ]

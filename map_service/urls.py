@@ -6,5 +6,6 @@ router = routers.DefaultRouter()
 router.register(r'status', views.KnnectViewSet, 'Status')
 
 urlpatterns = [
-    url(r'^', include(router.urls)),
+    # url(r'^', include(router.urls)),
+    url(r'^lk_states', views.KnnectViewSet.lk_states),
 ]

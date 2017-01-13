@@ -69,7 +69,9 @@ class KnnectHandler(TCPServer):
 
     @gen.coroutine
     def update_lk_status(self, data):
-        result = yield self.db.testing.update_one({'i': data.id}, {'$set': {'lk_geo_feature': data, 'lk_state':
+        coords = next(geojson.utils.coords(data))
+        g_point = geojson.Point(coords)
+        result = yield self.db.lk_state.update_one({'o_id': data.id}, {'$set': {'lk_geo_json': g_point, 'lk_state':
             data['properties']['state']}}, upsert=True)
         logger.info("Update LK_Status with id = {}".format(result.raw_result))
 
