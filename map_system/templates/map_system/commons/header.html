@@ -82,6 +82,7 @@
 
     <script src="{% static 'map_system/libraries/typeahead/typeahead.bundle.js' %}"></script>
 
+    <script src="{% static 'map_system/libraries/axios/axios.min.js' %}"></script>
 
     <!-- Self javascript libraries (Order of the import is very important, changing the order might shadow some variables, append new script to bottom ) -->
     <script src="{% static 'map_system/local/application_options.js' %}"></script>
@@ -89,12 +90,12 @@
         ApplicationOptions.constance.STATIC_URL = "{% static '' %}";
     </script>
      <link rel="stylesheet" href="{% static 'map_system/libraries/app.css' %}">
-
     <script src="{% static 'map_system/local/spatialObject.js' %}"></script>
+    <script src="{% static 'map_system/local/libraries/utils.js' %}"></script>
+    <script src="{% static 'map_system/local/libraries/services.js' %}"></script>
     <script src="{% static 'map_system/local/websocket.js' %}"></script>
     <script src="{% static 'map_system/local/geo_remote.js' %}"></script>
     <script src="{% static 'map_system/local/geo_fencing.js' %}"></script>
-    <script src="{% static 'map_system/local/show_alert_in_map.js' %}"></script>
     <script src="{% static 'map_system/local/ajax_csrf_protect.js' %}"></script>
 
     <!-- Combined and compiled JS with google closure compile-->

@@ -2,8 +2,8 @@
  * Created by tmkasun on 1/3/17.
  */
 
-
-/*function SpatialObject(geoJSON) {
+/*
+ function SpatialObject(geoJSON) {
  this.id = geoJSON.id;
 
  // Have to store the coordinates , to use when user wants to draw path
@@ -203,7 +203,8 @@
  this.marker.setPopupContent(this.popupTemplate.html())
 
 
- };*/
+ };
+ */
 'use strict';
 class SpatialObject {
     constructor(geoJSON) {
@@ -252,7 +253,9 @@ class SpatialObject {
 //    };
         this.speedHistory = new LocalStorageArray(this.id);
         this.geoJson = L.geoJson(geoJSON, {
-            pointToLayer: (feature, latlng) => {return L.marker(latlng, {icon: this.icons.normalIcon, iconAngle: this.heading});}
+            pointToLayer: (feature, latlng) => {
+                return L.marker(latlng, {icon: this.icons.normalIcon, iconAngle: this.heading});
+            }
         })
         ; // Create Leaflet GeoJson object
 
@@ -285,13 +288,13 @@ class SpatialObject {
 
             // only add the new path section to map if the spatial object is selected
             if (selectedSpatialObject == this.id) {
-                var newPathSection = new L.polyline(newLineStringGeoJson.geometry.coordinates, this.getSectionStyles(geoJSON.properties.state));
+                var newPathSection = new L.polyline(newLineStringGeoJson.geometry.coordinates, this.getIconForState(geoJSON.properties.state));
                 newPathSection.bindPopup("Alert Information: " + newLineStringGeoJson.properties.information);
 
                 // Creating two sections joint // TODO : line color confusing , use diffrent color or seperator
                 var lastSection = this.path[this.path.length - 1].getLatLngs();
                 var joinLine = [lastSection[lastSection.length - 1], [this.latitude, this.longitude]];
-                var sectionJoin = new L.polyline(joinLine, this.getSectionStyles());
+                var sectionJoin = new L.polyline(joinLine, this.getIconForState());
                 sectionJoin.setStyle({className: "sectionJointStyle"});// Make doted line for section join , this class is currently defined in map.jag as a inner css
 
                 this.path.push(sectionJoin);
@@ -384,4 +387,43 @@ class SpatialObject {
             }
         };
     }
+
+    drawPath() {
+        var previousSectionLastPoint = []; // re init all the time when calls the function
+        if (this.path.length > 0) {
+            this.removePath();
+            //            throw "geoDashboard error: path already exist,remove current path before drawing a new path, if need to update LatLngs use setLatLngs method instead"; // Path already exist
+        }
+        for (var lineString in this.pathGeoJsons) {
+            if (!this.pathGeoJsons.hasOwnProperty(lineString)) {
+                continue
+            }
+            var currentSectionState = this.pathGeoJsons[lineString].properties.state;
+            var currentSection = new L.polyline(this.pathGeoJsons[lineString].geometry.coordinates, this.getIconForState(currentSectionState)); // Create path object when and only drawing the path (save memory) TODO: if need directly draw line from geojson
+
+            var currentSectionFirstPoint = this.pathGeoJsons[lineString].geometry.coordinates[0];
+            console.log("DEBUG: previousSectionLastPoint = " + previousSectionLastPoint + " currentSectionFirstPoint = " + currentSectionFirstPoint);
+            previousSectionLastPoint.push(currentSectionFirstPoint);
+            var sectionJoin = new L.polyline(previousSectionLastPoint, this.getIconForState());
+            sectionJoin.setStyle({className: "sectionJointStyle"});// Make doted line for section join , this class is currently defined in map.jag as a inner css
+
+            previousSectionLastPoint = [this.pathGeoJsons[lineString].geometry.coordinates[this.pathGeoJsons[lineString].geometry.coordinates.length - 1]];
+            sectionJoin.addTo(map);
+            this.path.push(sectionJoin);
+            console.log("DEBUG: Alert Information: " + this.pathGeoJsons[lineString].properties.information);
+            currentSection.bindPopup("Alert Information: " + this.pathGeoJsons[lineString].properties.information);
+            currentSection.addTo(map);
+            this.path.push(currentSection);
+        }
+    }
+
+    removePath() {
+        for (var section in this.path) {
+            if (this.path.hasOwnProperty(section)) {
+                map.removeLayer(this.path[section]);
+            }
+        }
+        this.path = []; // Clear the path layer (save memory)
+    };
+
 }

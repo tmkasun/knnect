@@ -5,7 +5,7 @@ from tornado.iostream import StreamClosedError, IOStream
 from tornado.tcpserver import TCPServer
 import csv
 import pynmea2
-import geojson  # Docs https://pypi.python.org/pypi/geojson
+import geojson  # Docs https://pypi.python.org/pypi/geojson # https://github.com/tmcw/awesome-geojson
 from shapely.geometry import Point
 import motor
 from motor.motor_tornado import MotorClient
@@ -70,9 +70,9 @@ class KnnectHandler(TCPServer):
     @gen.coroutine
     def update_lk_status(self, data):
         coords = next(geojson.utils.coords(data))
-        g_point = geojson.Point(coords)
-        result = yield self.db.lk_state.update_one({'o_id': data.id}, {'$set': {'lk_geo_json': g_point, 'lk_state':
-            data['properties']['state']}}, upsert=True)
+        g_point = geojson.Point(coords)  # Since Mongo DB dosn't support GeoJSON Feature Objects yet
+        result = yield self.db.lk_state.update_one({'o_id': data.id}, {'$set': {'lk_geo_json': g_point, 'lk_properties':
+            data['properties']}}, upsert=True)
         logger.info("Update LK_Status with id = {}".format(result.raw_result))
 
     # @gen.coroutine
