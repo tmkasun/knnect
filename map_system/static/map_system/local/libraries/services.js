@@ -7,7 +7,7 @@ class MapService {
         this.service_endpoint = "/apis/";
         this.client = axios.create( //https://github.com/mzabriskie/axios
             {
-                baseURL: 'http://localhost:8000' + this.service_endpoint
+                baseURL: 'http://geo.knnect.com' + this.service_endpoint
             }
         );
     }
