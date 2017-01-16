@@ -19,3 +19,4 @@ tests/.coverage
 build/
 tests/report/
 testing/
+production_static/
