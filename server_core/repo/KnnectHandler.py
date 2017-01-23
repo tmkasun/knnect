@@ -42,8 +42,8 @@ class KnnectHandler(TCPServer):
                 if not data.endswith(b"\n"):
                     data += b"\n"
                 logger.info("Received bytes: %s", data)
-                self.save(data)
                 g_feature = self._tk103_parser(data)
+                self.save(g_feature)
                 self.notify_clients(g_feature)
                 if first:
                     g_feature['properties']['state'] = 'ONLINE'
@@ -61,7 +61,7 @@ class KnnectHandler(TCPServer):
 
     @gen.coroutine
     def save(self, data):
-        result = yield self.db.messages.insert_one({'raw': data})
+        result = yield self.db.spatial_objects.insert_one(data)
         logger.info("Saved with id = {}".format(result.inserted_id))
 
     def notify_clients(self, message):
@@ -94,7 +94,9 @@ class KnnectHandler(TCPServer):
             g_properties = {
                 'heading': data.true_course,
                 'speed': data.spd_over_grnd,
-                'state': "NORMAL"
+                'state': "NORMAL",
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
             }
             g_feature = geojson.Feature(geometry=g_point, id=imei, properties=g_properties)
             # self.ws_handler.connections[3].write_message(g_point)
