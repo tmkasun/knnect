@@ -1,6 +1,10 @@
 from rest_framework_mongoengine import viewsets
+from mongoengine.queryset.visitor import Q
 from map_service.serializers import LkStateSerializer
+from map_service.serializers import SpatialObjectsSerializer
 from map_service.models import LkState
+from map_service.models import SpatialObjects
+from datetime import datetime
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -17,7 +21,7 @@ class JSONResponse(HttpResponse):
         super(JSONResponse, self).__init__(content, **kwargs)
 
 
-class KnnectViewSet(object):
+class LastKnownService(object):
     # serializer_class = LkStateSerializer
     # queryset = LkState.objects.all()
     # many = True
@@ -28,3 +32,15 @@ class KnnectViewSet(object):
         states = LkState.objects.all()
         serialized = LkStateSerializer(states, many=True)
         return JSONResponse(serialized.data)
+
+
+class ObjectService(object):
+    @csrf_exempt
+    def session_path(self, id):
+        session = LkState.objects.get(id=id)
+        session_start_time = session.lk_properties['created_at']
+        current_time = datetime.now()
+        db_query = Q(properties__created_at__lte=current_time) & Q(properties__created_at__gte=session_start_time)
+        path = SpatialObjects.objects(db_query)
+        serialized_path = SpatialObjectsSerializer(path, many=True)
+        return JSONResponse(serialized_path.data)

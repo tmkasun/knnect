@@ -141,12 +141,13 @@ function notifyAlert(message, status) {
 function preLoadObjects() {
     var objectStates = new LKStates();
     objectStates.getAll(addObjectsToMap);
+    debugger;
     function addObjectsToMap(response) {
         for (let geoJSON of response.data) {
             var geoFeature = {
                 "type": "Feature",
                 "geometry": geoJSON.lk_geo_json,
-                "id": geoJSON.o_id,
+                "id": geoJSON.id,
                 "properties": geoJSON.lk_properties
             };
             var spatialObject = new SpatialObject(geoFeature);

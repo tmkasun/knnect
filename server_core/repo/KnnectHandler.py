@@ -57,7 +57,7 @@ class KnnectHandler(TCPServer):
                 self.update_lk_status(g_feature)
                 break
             except Exception as e:
-                print(e)
+                print("Unknow error: {}".format(e))
 
     @gen.coroutine
     def save(self, data):
@@ -71,7 +71,7 @@ class KnnectHandler(TCPServer):
     def update_lk_status(self, data):
         coords = next(geojson.utils.coords(data))
         g_point = geojson.Point(coords)  # Since Mongo DB dosn't support GeoJSON Feature Objects yet
-        result = yield self.db.lk_state.update_one({'o_id': data.id}, {'$set': {'lk_geo_json': g_point, 'lk_properties':
+        result = yield self.db.lk_state.update_one({'id': data.id}, {'$set': {'lk_geo_json': g_point, 'lk_properties':
             data['properties']}}, upsert=True)
         logger.info("Update LK_Status with id = {}".format(result.raw_result))
 
@@ -84,18 +84,20 @@ class KnnectHandler(TCPServer):
     #     return data
 
     def _tk103_parser(self, data):
+        g_feature = None
         data_list = list(csv.reader([data.decode("utf-8")])).pop()
         start = data_list.index('GPRMC')
         if start:
             gprmc = ",".join(data_list[start:15])
             data = pynmea2.parse(gprmc)
             g_point = geojson.Point((data.longitude, data.latitude))
+            record_datetime = datetime.combine(data.datestamp, data.timestamp)
             imei = data_list[16].split(':')[1]
             g_properties = {
                 'heading': data.true_course,
                 'speed': data.spd_over_grnd,
                 'state': "NORMAL",
-                "created_at": datetime.utcnow(),
+                "created_at": record_datetime,
                 "updated_at": datetime.utcnow()
             }
             g_feature = geojson.Feature(geometry=g_point, id=imei, properties=g_properties)
