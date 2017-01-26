@@ -43,8 +43,8 @@ class KnnectHandler(TCPServer):
                     data += b"\n"
                 logger.info("Received bytes: %s", data)
                 g_feature = self._tk103_parser(data)
-                self.save(g_feature)
                 self.notify_clients(g_feature)
+                self.save(g_feature)
                 if first:
                     g_feature['properties']['state'] = 'ONLINE'
                     self.update_lk_status(g_feature)
@@ -64,8 +64,11 @@ class KnnectHandler(TCPServer):
         result = yield self.db.spatial_objects.insert_one(data)
         logger.info("Saved with id = {}".format(result.inserted_id))
 
+    @gen.coroutine
     def notify_clients(self, message):
-        [client.write_message(message) for client in self.ws_handler.connections]
+        message.properties['created_at'] = str(message.properties['created_at'])
+        message.properties['updated_at'] = str(message.properties['updated_at'])
+        yield [client.write_message(message) for client in self.ws_handler.connections]
 
     @gen.coroutine
     def update_lk_status(self, data):
