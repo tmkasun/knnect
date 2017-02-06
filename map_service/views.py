@@ -36,11 +36,12 @@ class LastKnownService(object):
 
 class ObjectService(object):
     @csrf_exempt
-    def session_path(self, id):
+    def session_path(request, id):
         session = LkState.objects.get(id=id)
-        session_start_time = session.lk_properties['created_at']
-        current_time = datetime.now()
+        limit = request.GET.get('limit', False)
+        session_start_time = session.lk_properties['updated_at']
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         db_query = Q(properties__created_at__lte=current_time) & Q(properties__created_at__gte=session_start_time)
-        path = SpatialObjects.objects(db_query)
+        path = SpatialObjects.objects(db_query).limit(int(limit)) if limit else SpatialObjects.objects(db_query)
         serialized_path = SpatialObjectsSerializer(path, many=True)
         return JSONResponse(serialized_path.data)
