@@ -1,6 +1,10 @@
+'use strict';
 /**
  * Created by tmkasun on 1/14/17.
  */
+
+var request = require('superagent');
+// var utils = require('./utils');
 
 /**
  * This is an abstract parent class for all types of map services, This initialize the axios connection with base URI for
@@ -12,11 +16,9 @@ class MapService {
      */
     constructor() {
         this.service_endpoint = "/apis/";
-        this.client = axios.create( //https://github.com/mzabriskie/axios
-            {
-                baseURL: 'http://localhost:8000' + this.service_endpoint
-            }
-        );
+        this.baseURL = 'http://localhost:8000/apis';
+        this.client = request;
+        // this.client.domain = this.baseURL;
     }
 }
 
@@ -31,7 +33,7 @@ class LKStates extends MapService {
      * @returns {Promise} Always return an promise object which may chained the a callback method if given when invoking
      */
     getAll(callback = false) {
-        var response = this.client.get('lk_states');
+        var response = this.client.get(this.baseURL + '/lk_states');
         if (callback) {
             return response.then(callback);
         } else {
@@ -47,9 +49,15 @@ class SpatialActivityService extends MapService {
     /**
      *
      * @param object_id {String} Id of an object i:e: IMEI , Registration number or UUID
-     * @param period {TimeRanges} Period of the time which need to retrieve the history
+     * @param limit {Number} Number of records needs to be fetched.
      */
-    getHistory(object_id, period) {
-
+    getHistory(object_id, limit) {
+        var response = this.client.get(this.baseURL + '/session_path/' + object_id).query({limit: limit});
+        return response;
     }
 }
+
+window.LKStates = LKStates;
+window.SpatialActivityService = SpatialActivityService;
+module.exports.LKStates = LKStates;
+module.exports.SpatialActivityService = SpatialActivityService;
