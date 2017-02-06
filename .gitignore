@@ -20,3 +20,5 @@ build/
 tests/report/
 testing/
 production_static/
+/map_system/static/map_system/local/libraries/node_modules/
+/map_system/static/map_system/local/libraries/npm-debug.log
