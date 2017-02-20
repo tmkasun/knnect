@@ -10,6 +10,7 @@
  *
  * TODO: when click on a notification alert ? "Uncaught ReferenceError: KM is not defined "
  */
+var handlers = require('./eventHandlers');
 var toggled = false;
 function focusOnSpatialObject(objectId) {
 
@@ -138,3 +139,9 @@ function showAlertInMap(alertData) {
 
 
 }
+
+window.LocalStorageArray = LocalStorageArray;
+window.focusOnSpatialObject = focusOnSpatialObject;
+window.Alert = Alert;
+window.showAlertInMap = showAlertInMap;
+window.registerHandlers = handlers.registerHandlers;

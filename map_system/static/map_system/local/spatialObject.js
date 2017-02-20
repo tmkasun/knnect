@@ -262,7 +262,10 @@ class SpatialObject {
         this.marker = this.geoJson.getLayers()[0];
         this.marker.options.title = this.id;
 
-        this.popupTemplate = $('#markerPopup');
+        this.popupTemplate = $('#markerPopup')
+            .clone()
+            .prop({id: 'markerPopup-' + this.id});
+        this.popupTemplate.find('.marker-data').attr({'data-id': this.id});
         this.marker.bindPopup(this.popupTemplate.html());
 
     }
@@ -388,7 +391,18 @@ class SpatialObject {
         };
     }
 
-    drawPath() {
+    drawPath(history_data = false) {
+        if (history_data && history_data.length > 0) {
+            var first_point = history_data[0];
+            var session_line_path = this._createLineStringFeature(first_point.properties.state, first_point.properties.created_at, [first_point.geometry.coordinates[1], first_point.geometry.coordinates[0]]);
+            for (var point_index in history_data) {
+                if (history_data.hasOwnProperty(point_index)) {
+                    var point = history_data[point_index];
+                    session_line_path.geometry.coordinates.push([point.geometry.coordinates[1], point.geometry.coordinates[0]]);
+                }
+            }
+            this.pathGeoJsons = [session_line_path];
+        }
         var previousSectionLastPoint = []; // re init all the time when calls the function
         if (this.path.length > 0) {
             this.removePath();

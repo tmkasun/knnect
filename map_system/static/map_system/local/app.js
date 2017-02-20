@@ -140,10 +140,8 @@ function notifyAlert(message, status) {
  */
 function preLoadObjects() {
     var objectStates = new LKStates();
-    objectStates.getAll(addObjectsToMap);
-    debugger;
     function addObjectsToMap(response) {
-        for (let geoJSON of response.data) {
+        for (let geoJSON of response.body) {
             var geoFeature = {
                 "type": "Feature",
                 "geometry": geoJSON.lk_geo_json,
@@ -156,6 +154,7 @@ function preLoadObjects() {
             currentSpatialObjects[spatialObject.id].geoJson.addTo(map);
         }
     }
+    objectStates.getAll(addObjectsToMap);
 }
 preLoadObjects();
 /**
@@ -238,11 +237,6 @@ var layerControl = L.control.groupedLayers(baseLayers, groupedOverlays, {
 }).addTo(map);
 
 var setupWizard;
-// wizard with it's cards initialization.
-$(function () {
-    var options = {submitUrl: "controllers/setup_dashboard.jag"};
-    setupWizard = $("#setup_dashboard").wizard(options);
-});
 
 
 $(".modal").draggable({
@@ -289,6 +283,13 @@ $('#searchbox').typeahead({
     }).on('typeahead:selected', function ($e, datum) {
     objectId = datum['value'];
     focusOnSpatialObject(objectId)
+});
+
+// Run once the DOM is loaded
+$(function () {
+    registerHandlers();
+    var options = {submitUrl: "controllers/setup_dashboard.jag"};
+    setupWizard = $("#setup_dashboard").wizard(options);
 });
 
 

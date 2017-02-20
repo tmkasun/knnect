@@ -141,16 +141,18 @@
     <!-- Template HTML components used by JS to inject contents-->
     <div style="display: none">
         <div id="markerPopup" class="popover top">
+            <span class="marker-data"></span>
             <div class="arrow"></div>
             <h3 class="popover-title">ID <span id="objectId"></span></h3>
 
             <div class="popover-content">
-                <h6>Information</h6>
+                <h6>Info</h6>
 
                 <p id="information" class="bg-primary" style="margin: 0px;padding: 0px;"></p>
                 <h6>Speed<span class="label label-primary pull-right"><span id="speed"></span> km/h</span></h6>
                 <h6>Heading<span id="heading" class="label label-primary pull-right"></span></h6>
-                <button type="button" class="btn btn-info btn-xs">History</button>
+                <button type="button" id="current-session" class="btn btn-info btn-xs">Current Session</button>
+                <button type="button" class="btn btn-info btn-xs">Details</button>
             </div>
         </div>
 
