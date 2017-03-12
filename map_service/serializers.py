@@ -11,3 +11,4 @@ class LkStateSerializer(serializers.DocumentSerializer):
 class SpatialObjectsSerializer(serializers.DocumentSerializer):
     class Meta:
         model = SpatialObjects
+        fields = '__all__'
