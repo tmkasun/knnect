@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# TODO: This needs to be replaced with proper puppet script
 branch="tornado-backend"
 
 echo "Deploying for production..."
