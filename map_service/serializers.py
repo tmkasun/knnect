@@ -6,7 +6,7 @@ from rest_framework_mongoengine import serializers
 class LkStateSerializer(serializers.DocumentSerializer):
     class Meta:
         model = LkState
-
+        fields = '__all__'
 
 class SpatialObjectsSerializer(serializers.DocumentSerializer):
     class Meta:
