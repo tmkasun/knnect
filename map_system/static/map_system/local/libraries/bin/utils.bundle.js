@@ -68,7 +68,12 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /**
  * Check if `obj` is an object.
@@ -79,28 +84,35 @@
  */
 
 function isObject(obj) {
-  return null !== obj && 'object' === typeof obj;
+  return null !== obj && 'object' === (typeof obj === 'undefined' ? 'undefined' : _typeof(obj));
 }
 
 module.exports = isObject;
 
-
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /**
  * Root reference for iframes.
  */
 
 var root;
-if (typeof window !== 'undefined') { // Browser window
+if (typeof window !== 'undefined') {
+  // Browser window
   root = window;
-} else if (typeof self !== 'undefined') { // Web Worker
+} else if (typeof self !== 'undefined') {
+  // Web Worker
   root = self;
-} else { // Other environments
+} else {
+  // Other environments
   console.warn("Using browser-only version of superagent in non-browser environment");
-  root = this;
+  root = undefined;
 }
 
 var Emitter = __webpack_require__(2);
@@ -114,13 +126,13 @@ var shouldRetry = __webpack_require__(6);
  * Noop.
  */
 
-function noop(){};
+function noop() {};
 
 /**
  * Expose `request`.
  */
 
-var request = exports = module.exports = function(method, url) {
+var request = exports = module.exports = function (method, url) {
   // callback
   if ('function' == typeof url) {
     return new exports.Request('GET', method).end(url);
@@ -132,7 +144,7 @@ var request = exports = module.exports = function(method, url) {
   }
 
   return new exports.Request(method, url);
-}
+};
 
 exports.Request = Request;
 
@@ -141,15 +153,21 @@ exports.Request = Request;
  */
 
 request.getXHR = function () {
-  if (root.XMLHttpRequest
-      && (!root.location || 'file:' != root.location.protocol
-          || !root.ActiveXObject)) {
-    return new XMLHttpRequest;
+  if (root.XMLHttpRequest && (!root.location || 'file:' != root.location.protocol || !root.ActiveXObject)) {
+    return new XMLHttpRequest();
   } else {
-    try { return new ActiveXObject('Microsoft.XMLHTTP'); } catch(e) {}
-    try { return new ActiveXObject('Msxml2.XMLHTTP.6.0'); } catch(e) {}
-    try { return new ActiveXObject('Msxml2.XMLHTTP.3.0'); } catch(e) {}
-    try { return new ActiveXObject('Msxml2.XMLHTTP'); } catch(e) {}
+    try {
+      return new ActiveXObject('Microsoft.XMLHTTP');
+    } catch (e) {}
+    try {
+      return new ActiveXObject('Msxml2.XMLHTTP.6.0');
+    } catch (e) {}
+    try {
+      return new ActiveXObject('Msxml2.XMLHTTP.3.0');
+    } catch (e) {}
+    try {
+      return new ActiveXObject('Msxml2.XMLHTTP');
+    } catch (e) {}
   }
   throw Error("Browser-only verison of superagent could not find XHR");
 };
@@ -162,9 +180,11 @@ request.getXHR = function () {
  * @api private
  */
 
-var trim = ''.trim
-  ? function(s) { return s.trim(); }
-  : function(s) { return s.replace(/(^\s*|\s*$)/g, ''); };
+var trim = ''.trim ? function (s) {
+  return s.trim();
+} : function (s) {
+  return s.replace(/(^\s*|\s*$)/g, '');
+};
 
 /**
  * Serialize the given `obj`.
@@ -195,16 +215,15 @@ function serialize(obj) {
 function pushEncodedKeyValuePair(pairs, key, val) {
   if (val != null) {
     if (Array.isArray(val)) {
-      val.forEach(function(v) {
+      val.forEach(function (v) {
         pushEncodedKeyValuePair(pairs, key, v);
       });
     } else if (isObject(val)) {
-      for(var subkey in val) {
+      for (var subkey in val) {
         pushEncodedKeyValuePair(pairs, key + '[' + subkey + ']', val[subkey]);
       }
     } else {
-      pairs.push(encodeURIComponent(key)
-        + '=' + encodeURIComponent(val));
+      pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(val));
     }
   } else if (val === null) {
     pairs.push(encodeURIComponent(key));
@@ -215,15 +234,15 @@ function pushEncodedKeyValuePair(pairs, key, val) {
  * Expose serialization method.
  */
 
- request.serializeObject = serialize;
+request.serializeObject = serialize;
 
- /**
-  * Parse the given x-www-form-urlencoded `str`.
-  *
-  * @param {String} str
-  * @return {Object}
-  * @api private
-  */
+/**
+ * Parse the given x-www-form-urlencoded `str`.
+ *
+ * @param {String} str
+ * @return {Object}
+ * @api private
+ */
 
 function parseString(str) {
   var obj = {};
@@ -237,8 +256,7 @@ function parseString(str) {
     if (pos == -1) {
       obj[decodeURIComponent(pair)] = '';
     } else {
-      obj[decodeURIComponent(pair.slice(0, pos))] =
-        decodeURIComponent(pair.slice(pos + 1));
+      obj[decodeURIComponent(pair.slice(0, pos))] = decodeURIComponent(pair.slice(pos + 1));
     }
   }
 
@@ -276,19 +294,19 @@ request.types = {
  *
  */
 
- request.serialize = {
-   'application/x-www-form-urlencoded': serialize,
-   'application/json': JSON.stringify
- };
+request.serialize = {
+  'application/x-www-form-urlencoded': serialize,
+  'application/json': JSON.stringify
+};
 
- /**
-  * Default parsers.
-  *
-  *     superagent.parse['application/xml'] = function(str){
-  *       return { object parsed from str };
-  *     };
-  *
-  */
+/**
+ * Default parsers.
+ *
+ *     superagent.parse['application/xml'] = function(str){
+ *       return { object parsed from str };
+ *     };
+ *
+ */
 
 request.parse = {
   'application/x-www-form-urlencoded': parseString,
@@ -334,7 +352,8 @@ function parseHeader(str) {
  */
 
 function isJSON(mime) {
-  return /[\/+]json\b/.test(mime);
+  return (/[\/+]json\b/.test(mime)
+  );
 }
 
 /**
@@ -387,14 +406,12 @@ function Response(req) {
   this.req = req;
   this.xhr = this.req.xhr;
   // responseText is accessible only if responseType is '' or 'text' and on older browsers
-  this.text = ((this.req.method !='HEAD' && (this.xhr.responseType === '' || this.xhr.responseType === 'text')) || typeof this.xhr.responseType === 'undefined')
-     ? this.xhr.responseText
-     : null;
+  this.text = this.req.method != 'HEAD' && (this.xhr.responseType === '' || this.xhr.responseType === 'text') || typeof this.xhr.responseType === 'undefined' ? this.xhr.responseText : null;
   this.statusText = this.req.xhr.statusText;
   var status = this.xhr.status;
   // handle IE9 bug: http://stackoverflow.com/questions/10046972/msie-returns-status-code-of-1223-for-ajax-request
   if (status === 1223) {
-      status = 204;
+    status = 204;
   }
   this._setStatusProperties(status);
   this.header = this.headers = parseHeader(this.xhr.getAllResponseHeaders());
@@ -407,9 +424,7 @@ function Response(req) {
   if (null === this.text && req._responseType) {
     this.body = this.xhr.response;
   } else {
-    this.body = this.req.method != 'HEAD'
-      ? this._parseBody(this.text ? this.text : this.xhr.response)
-      : null;
+    this.body = this.req.method != 'HEAD' ? this._parseBody(this.text ? this.text : this.xhr.response) : null;
   }
 }
 
@@ -426,17 +441,15 @@ ResponseBase(Response.prototype);
  * @api private
  */
 
-Response.prototype._parseBody = function(str){
+Response.prototype._parseBody = function (str) {
   var parse = request.parse[this.type];
-  if(this.req._parser) {
+  if (this.req._parser) {
     return this.req._parser(this, str);
   }
   if (!parse && isJSON(this.type)) {
     parse = request.parse['application/json'];
   }
-  return parse && str && (str.length || str instanceof Object)
-    ? parse(str)
-    : null;
+  return parse && str && (str.length || str instanceof Object) ? parse(str) : null;
 };
 
 /**
@@ -446,7 +459,7 @@ Response.prototype._parseBody = function(str){
  * @api public
  */
 
-Response.prototype.toError = function(){
+Response.prototype.toError = function () {
   var req = this.req;
   var method = req.method;
   var url = req.url;
@@ -481,13 +494,13 @@ function Request(method, url) {
   this.url = url;
   this.header = {}; // preserves header name case
   this._header = {}; // coerces header names to lowercase
-  this.on('end', function(){
+  this.on('end', function () {
     var err = null;
     var res = null;
 
     try {
       res = new Response(self);
-    } catch(e) {
+    } catch (e) {
       err = new Error('Parser is unable to parse the response');
       err.parse = true;
       err.original = e;
@@ -516,7 +529,7 @@ function Request(method, url) {
         new_err.response = res;
         new_err.status = res.status;
       }
-    } catch(e) {
+    } catch (e) {
       new_err = e; // #985 touching res may cause INVALID_STATE_ERR on old Android
     }
 
@@ -558,7 +571,7 @@ RequestBase(Request.prototype);
  * @api public
  */
 
-Request.prototype.type = function(type){
+Request.prototype.type = function (type) {
   this.set('Content-Type', request.types[type] || type);
   return this;
 };
@@ -583,7 +596,7 @@ Request.prototype.type = function(type){
  * @api public
  */
 
-Request.prototype.accept = function(type){
+Request.prototype.accept = function (type) {
   this.set('Accept', request.types[type] || type);
   return this;
 };
@@ -598,22 +611,22 @@ Request.prototype.accept = function(type){
  * @api public
  */
 
-Request.prototype.auth = function(user, pass, options){
+Request.prototype.auth = function (user, pass, options) {
   if (!options) {
     options = {
-      type: 'function' === typeof btoa ? 'basic' : 'auto',
-    }
+      type: 'function' === typeof btoa ? 'basic' : 'auto'
+    };
   }
 
   switch (options.type) {
     case 'basic':
       this.set('Authorization', 'Basic ' + btoa(user + ':' + pass));
-    break;
+      break;
 
     case 'auto':
       this.username = user;
       this.password = pass;
-    break;
+      break;
   }
   return this;
 };
@@ -632,7 +645,7 @@ Request.prototype.auth = function(user, pass, options){
  * @api public
  */
 
-Request.prototype.query = function(val){
+Request.prototype.query = function (val) {
   if ('string' != typeof val) val = serialize(val);
   if (val) this._query.push(val);
   return this;
@@ -655,7 +668,7 @@ Request.prototype.query = function(val){
  * @api public
  */
 
-Request.prototype.attach = function(field, file, options){
+Request.prototype.attach = function (field, file, options) {
   if (this._data) {
     throw Error("superagent can't mix .send() and .attach()");
   }
@@ -664,7 +677,7 @@ Request.prototype.attach = function(field, file, options){
   return this;
 };
 
-Request.prototype._getFormData = function(){
+Request.prototype._getFormData = function () {
   if (!this._formData) {
     this._formData = new root.FormData();
   }
@@ -680,7 +693,7 @@ Request.prototype._getFormData = function(){
  * @api private
  */
 
-Request.prototype.callback = function(err, res){
+Request.prototype.callback = function (err, res) {
   // console.log(this._retries, this._maxRetries)
   if (this._maxRetries && this._retries++ < this._maxRetries && shouldRetry(err, res)) {
     return this._retry();
@@ -703,7 +716,7 @@ Request.prototype.callback = function(err, res){
  * @api private
  */
 
-Request.prototype.crossDomainError = function(){
+Request.prototype.crossDomainError = function () {
   var err = new Error('Request has been terminated\nPossible causes: the network is offline, Origin is not allowed by Access-Control-Allow-Origin, the page is being unloaded, etc.');
   err.crossDomain = true;
 
@@ -715,13 +728,13 @@ Request.prototype.crossDomainError = function(){
 };
 
 // This only warns, because the request is still likely to work
-Request.prototype.buffer = Request.prototype.ca = Request.prototype.agent = function(){
+Request.prototype.buffer = Request.prototype.ca = Request.prototype.agent = function () {
   console.warn("This is not supported in browser version of superagent");
   return this;
 };
 
 // This throws, because it can't send/receive data as expected
-Request.prototype.pipe = Request.prototype.write = function(){
+Request.prototype.pipe = Request.prototype.write = function () {
   throw Error("Streaming is not supported in browser version of superagent");
 };
 
@@ -731,7 +744,7 @@ Request.prototype.pipe = Request.prototype.write = function(){
  * @api private
  */
 
-Request.prototype._appendQueryString = function(){
+Request.prototype._appendQueryString = function () {
   var query = this._query.join('&');
   if (query) {
     this.url += (this.url.indexOf('?') >= 0 ? '&' : '?') + query;
@@ -761,8 +774,8 @@ Request.prototype._appendQueryString = function(){
  */
 Request.prototype._isHost = function _isHost(obj) {
   // Native objects stringify to [object File], [object Blob], [object FormData], etc.
-  return obj && 'object' === typeof obj && !Array.isArray(obj) && Object.prototype.toString.call(obj) !== '[object Object]';
-}
+  return obj && 'object' === (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) && !Array.isArray(obj) && Object.prototype.toString.call(obj) !== '[object Object]';
+};
 
 /**
  * Initiate request, invoking callback `fn(res)`
@@ -773,7 +786,7 @@ Request.prototype._isHost = function _isHost(obj) {
  * @api public
  */
 
-Request.prototype.end = function(fn){
+Request.prototype.end = function (fn) {
   if (this._endCalled) {
     console.warn("Warning: .end() was called twice. This is not supported in superagent");
   }
@@ -788,7 +801,7 @@ Request.prototype.end = function(fn){
   return this._end();
 };
 
-Request.prototype._end = function() {
+Request.prototype._end = function () {
   var self = this;
   var xhr = this.xhr = request.getXHR();
   var data = this._formData || this._data;
@@ -796,7 +809,7 @@ Request.prototype._end = function() {
   this._setTimeouts();
 
   // state change
-  xhr.onreadystatechange = function(){
+  xhr.onreadystatechange = function () {
     var readyState = xhr.readyState;
     if (readyState >= 2 && self._responseTimeoutTimer) {
       clearTimeout(self._responseTimeoutTimer);
@@ -808,7 +821,11 @@ Request.prototype._end = function() {
     // In IE9, reads to any property (e.g. status) off of an aborted XHR will
     // result in the error "Could not complete the operation due to error c00c023f"
     var status;
-    try { status = xhr.status } catch(e) { status = 0; }
+    try {
+      status = xhr.status;
+    } catch (e) {
+      status = 0;
+    }
 
     if (!status) {
       if (self.timedout || self._aborted) return;
@@ -818,20 +835,20 @@ Request.prototype._end = function() {
   };
 
   // progress
-  var handleProgress = function(direction, e) {
+  var handleProgress = function handleProgress(direction, e) {
     if (e.total > 0) {
       e.percent = e.loaded / e.total * 100;
     }
     e.direction = direction;
     self.emit('progress', e);
-  }
+  };
   if (this.hasListeners('progress')) {
     try {
       xhr.onprogress = handleProgress.bind(null, 'download');
       if (xhr.upload) {
         xhr.upload.onprogress = handleProgress.bind(null, 'upload');
       }
-    } catch(e) {
+    } catch (e) {
       // Accessing xhr.upload fails in IE from a web worker, so just pretend it doesn't exist.
       // Reported here:
       // https://connect.microsoft.com/IE/feedback/details/837245/xmlhttprequest-upload-throws-invalid-argument-when-used-from-web-worker-context
@@ -893,7 +910,7 @@ Request.prototype._end = function() {
  * @api public
  */
 
-request.get = function(url, data, fn){
+request.get = function (url, data, fn) {
   var req = request('GET', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.query(data);
@@ -911,7 +928,7 @@ request.get = function(url, data, fn){
  * @api public
  */
 
-request.head = function(url, data, fn){
+request.head = function (url, data, fn) {
   var req = request('HEAD', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.send(data);
@@ -929,7 +946,7 @@ request.head = function(url, data, fn){
  * @api public
  */
 
-request.options = function(url, data, fn){
+request.options = function (url, data, fn) {
   var req = request('OPTIONS', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.send(data);
@@ -947,7 +964,7 @@ request.options = function(url, data, fn){
  * @api public
  */
 
-function del(url, data, fn){
+function del(url, data, fn) {
   var req = request('DELETE', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.send(data);
@@ -968,7 +985,7 @@ request['delete'] = del;
  * @api public
  */
 
-request.patch = function(url, data, fn){
+request.patch = function (url, data, fn) {
   var req = request('PATCH', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.send(data);
@@ -986,7 +1003,7 @@ request.patch = function(url, data, fn){
  * @api public
  */
 
-request.post = function(url, data, fn){
+request.post = function (url, data, fn) {
   var req = request('POST', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.send(data);
@@ -1004,7 +1021,7 @@ request.post = function(url, data, fn){
  * @api public
  */
 
-request.put = function(url, data, fn){
+request.put = function (url, data, fn) {
   var req = request('PUT', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.send(data);
@@ -1012,10 +1029,11 @@ request.put = function(url, data, fn){
   return req;
 };
 
-
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
 /**
@@ -1060,11 +1078,9 @@ function mixin(obj) {
  * @api public
  */
 
-Emitter.prototype.on =
-Emitter.prototype.addEventListener = function(event, fn){
+Emitter.prototype.on = Emitter.prototype.addEventListener = function (event, fn) {
   this._callbacks = this._callbacks || {};
-  (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
-    .push(fn);
+  (this._callbacks['$' + event] = this._callbacks['$' + event] || []).push(fn);
   return this;
 };
 
@@ -1078,7 +1094,7 @@ Emitter.prototype.addEventListener = function(event, fn){
  * @api public
  */
 
-Emitter.prototype.once = function(event, fn){
+Emitter.prototype.once = function (event, fn) {
   function on() {
     this.off(event, on);
     fn.apply(this, arguments);
@@ -1099,10 +1115,7 @@ Emitter.prototype.once = function(event, fn){
  * @api public
  */
 
-Emitter.prototype.off =
-Emitter.prototype.removeListener =
-Emitter.prototype.removeAllListeners =
-Emitter.prototype.removeEventListener = function(event, fn){
+Emitter.prototype.off = Emitter.prototype.removeListener = Emitter.prototype.removeAllListeners = Emitter.prototype.removeEventListener = function (event, fn) {
   this._callbacks = this._callbacks || {};
 
   // all
@@ -1141,10 +1154,10 @@ Emitter.prototype.removeEventListener = function(event, fn){
  * @return {Emitter}
  */
 
-Emitter.prototype.emit = function(event){
+Emitter.prototype.emit = function (event) {
   this._callbacks = this._callbacks || {};
-  var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks['$' + event];
+  var args = [].slice.call(arguments, 1),
+      callbacks = this._callbacks['$' + event];
 
   if (callbacks) {
     callbacks = callbacks.slice(0);
@@ -1164,7 +1177,7 @@ Emitter.prototype.emit = function(event){
  * @api public
  */
 
-Emitter.prototype.listeners = function(event){
+Emitter.prototype.listeners = function (event) {
   this._callbacks = this._callbacks || {};
   return this._callbacks['$' + event] || [];
 };
@@ -1177,14 +1190,16 @@ Emitter.prototype.listeners = function(event){
  * @api public
  */
 
-Emitter.prototype.hasListeners = function(event){
-  return !! this.listeners(event).length;
+Emitter.prototype.hasListeners = function (event) {
+  return !!this.listeners(event).length;
 };
-
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 /**
  * Check if `fn` is a function.
@@ -1202,10 +1217,14 @@ function isFunction(fn) {
 
 module.exports = isFunction;
 
-
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /**
  * Module of mixed-in functions shared between node and client code
@@ -1250,7 +1269,7 @@ function mixin(obj) {
  * @api public
  */
 
-RequestBase.prototype.clearTimeout = function _clearTimeout(){
+RequestBase.prototype.clearTimeout = function _clearTimeout() {
   clearTimeout(this._timer);
   clearTimeout(this._responseTimeoutTimer);
   delete this._timer;
@@ -1267,7 +1286,7 @@ RequestBase.prototype.clearTimeout = function _clearTimeout(){
  * @api public
  */
 
-RequestBase.prototype.parse = function parse(fn){
+RequestBase.prototype.parse = function parse(fn) {
   this._parser = fn;
   return this;
 };
@@ -1290,7 +1309,7 @@ RequestBase.prototype.parse = function parse(fn){
  * @api public
  */
 
-RequestBase.prototype.responseType = function(val){
+RequestBase.prototype.responseType = function (val) {
   this._responseType = val;
   return this;
 };
@@ -1304,7 +1323,7 @@ RequestBase.prototype.responseType = function(val){
  * @api public
  */
 
-RequestBase.prototype.serialize = function serialize(fn){
+RequestBase.prototype.serialize = function serialize(fn) {
   this._serializer = fn;
   return this;
 };
@@ -1322,8 +1341,8 @@ RequestBase.prototype.serialize = function serialize(fn){
  * @api public
  */
 
-RequestBase.prototype.timeout = function timeout(options){
-  if (!options || 'object' !== typeof options) {
+RequestBase.prototype.timeout = function timeout(options) {
+  if (!options || 'object' !== (typeof options === 'undefined' ? 'undefined' : _typeof(options))) {
     this._timeout = options;
     this._responseTimeout = 0;
     return this;
@@ -1348,7 +1367,7 @@ RequestBase.prototype.timeout = function timeout(options){
  * @api public
  */
 
-RequestBase.prototype.retry = function retry(count){
+RequestBase.prototype.retry = function retry(count) {
   // Default to 1 if no count passed or true
   if (arguments.length === 0 || count === true) count = 1;
   if (count <= 0) count = 0;
@@ -1364,7 +1383,7 @@ RequestBase.prototype.retry = function retry(count){
  * @api private
  */
 
-RequestBase.prototype._retry = function() {
+RequestBase.prototype._retry = function () {
   this.clearTimeout();
 
   // node
@@ -1393,16 +1412,16 @@ RequestBase.prototype.then = function then(resolve, reject) {
     if (this._endCalled) {
       console.warn("Warning: superagent request was sent twice, because both .end() and .then() were called. Never call .end() if you use promises");
     }
-    this._fullfilledPromise = new Promise(function(innerResolve, innerReject){
-      self.end(function(err, res){
-        if (err) innerReject(err); else innerResolve(res);
+    this._fullfilledPromise = new Promise(function (innerResolve, innerReject) {
+      self.end(function (err, res) {
+        if (err) innerReject(err);else innerResolve(res);
       });
     });
   }
   return this._fullfilledPromise.then(resolve, reject);
-}
+};
 
-RequestBase.prototype.catch = function(cb) {
+RequestBase.prototype.catch = function (cb) {
   return this.then(undefined, cb);
 };
 
@@ -1413,15 +1432,15 @@ RequestBase.prototype.catch = function(cb) {
 RequestBase.prototype.use = function use(fn) {
   fn(this);
   return this;
-}
+};
 
-RequestBase.prototype.ok = function(cb) {
+RequestBase.prototype.ok = function (cb) {
   if ('function' !== typeof cb) throw Error("Callback required");
   this._okCallback = cb;
   return this;
 };
 
-RequestBase.prototype._isResponseOK = function(res) {
+RequestBase.prototype._isResponseOK = function (res) {
   if (!res) {
     return false;
   }
@@ -1433,7 +1452,6 @@ RequestBase.prototype._isResponseOK = function(res) {
   return res.status >= 200 && res.status < 300;
 };
 
-
 /**
  * Get request header `field`.
  * Case-insensitive.
@@ -1443,7 +1461,7 @@ RequestBase.prototype._isResponseOK = function(res) {
  * @api public
  */
 
-RequestBase.prototype.get = function(field){
+RequestBase.prototype.get = function (field) {
   return this._header[field.toLowerCase()];
 };
 
@@ -1482,7 +1500,7 @@ RequestBase.prototype.getHeader = RequestBase.prototype.get;
  * @api public
  */
 
-RequestBase.prototype.set = function(field, val){
+RequestBase.prototype.set = function (field, val) {
   if (isObject(field)) {
     for (var key in field) {
       this.set(key, field[key]);
@@ -1506,7 +1524,7 @@ RequestBase.prototype.set = function(field, val){
  *
  * @param {String} field
  */
-RequestBase.prototype.unset = function(field){
+RequestBase.prototype.unset = function (field) {
   delete this._header[field.toLowerCase()];
   delete this.header[field];
   return this;
@@ -1531,10 +1549,10 @@ RequestBase.prototype.unset = function(field){
  * @return {Request} for chaining
  * @api public
  */
-RequestBase.prototype.field = function(name, val) {
+RequestBase.prototype.field = function (name, val) {
 
   // name should be either a string or an object.
-  if (null === name ||  undefined === name) {
+  if (null === name || undefined === name) {
     throw new Error('.field(name, val) name can not be empty');
   }
 
@@ -1573,7 +1591,7 @@ RequestBase.prototype.field = function(name, val) {
  * @return {Request}
  * @api public
  */
-RequestBase.prototype.abort = function(){
+RequestBase.prototype.abort = function () {
   if (this._aborted) {
     return this;
   }
@@ -1596,7 +1614,7 @@ RequestBase.prototype.abort = function(){
  * @api public
  */
 
-RequestBase.prototype.withCredentials = function(){
+RequestBase.prototype.withCredentials = function () {
   // This is browser-only functionality. Node side is no-op.
   this._withCredentials = true;
   return this;
@@ -1610,7 +1628,7 @@ RequestBase.prototype.withCredentials = function(){
  * @api public
  */
 
-RequestBase.prototype.redirects = function(n){
+RequestBase.prototype.redirects = function (n) {
   this._maxRedirects = n;
   return this;
 };
@@ -1624,7 +1642,7 @@ RequestBase.prototype.redirects = function(n){
  * @api public
  */
 
-RequestBase.prototype.toJSON = function(){
+RequestBase.prototype.toJSON = function () {
   return {
     method: this.method,
     url: this.url,
@@ -1632,7 +1650,6 @@ RequestBase.prototype.toJSON = function(){
     headers: this._header
   };
 };
-
 
 /**
  * Send `data` as the request body, defaulting the `.type()` to "json" when
@@ -1674,7 +1691,7 @@ RequestBase.prototype.toJSON = function(){
  * @api public
  */
 
-RequestBase.prototype.send = function(data){
+RequestBase.prototype.send = function (data) {
   var isObj = isObject(data);
   var type = this._header['content-type'];
 
@@ -1702,9 +1719,7 @@ RequestBase.prototype.send = function(data){
     if (!type) this.type('form');
     type = this._header['content-type'];
     if ('application/x-www-form-urlencoded' == type) {
-      this._data = this._data
-        ? this._data + '&' + data
-        : data;
+      this._data = this._data ? this._data + '&' + data : data;
     } else {
       this._data = (this._data || '') + data;
     }
@@ -1720,7 +1735,6 @@ RequestBase.prototype.send = function(data){
   if (!type) this.type('json');
   return this;
 };
-
 
 /**
  * Sort `querystring` by the sort function
@@ -1750,7 +1764,7 @@ RequestBase.prototype.send = function(data){
  * @api public
  */
 
-RequestBase.prototype.sortQuery = function(sort) {
+RequestBase.prototype.sortQuery = function (sort) {
   // _sort default to true but otherwise can be a function or boolean
   this._sort = typeof sort === 'undefined' ? true : sort;
   return this;
@@ -1762,7 +1776,7 @@ RequestBase.prototype.sortQuery = function(sort) {
  * @api private
  */
 
-RequestBase.prototype._timeoutError = function(reason, timeout){
+RequestBase.prototype._timeoutError = function (reason, timeout) {
   if (this._aborted) {
     return;
   }
@@ -1774,27 +1788,28 @@ RequestBase.prototype._timeoutError = function(reason, timeout){
   this.callback(err);
 };
 
-RequestBase.prototype._setTimeouts = function() {
+RequestBase.prototype._setTimeouts = function () {
   var self = this;
 
   // deadline
   if (this._timeout && !this._timer) {
-    this._timer = setTimeout(function(){
+    this._timer = setTimeout(function () {
       self._timeoutError('Timeout of ', self._timeout);
     }, this._timeout);
   }
   // response timeout
   if (this._responseTimeout && !this._responseTimeoutTimer) {
-    this._responseTimeoutTimer = setTimeout(function(){
+    this._responseTimeoutTimer = setTimeout(function () {
       self._timeoutError('Response timeout of ', self._responseTimeout);
     }, this._responseTimeout);
   }
-}
-
+};
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
 /**
@@ -1842,8 +1857,8 @@ function mixin(obj) {
  * @api public
  */
 
-ResponseBase.prototype.get = function(field){
-    return this.header[field.toLowerCase()];
+ResponseBase.prototype.get = function (field) {
+  return this.header[field.toLowerCase()];
 };
 
 /**
@@ -1858,28 +1873,28 @@ ResponseBase.prototype.get = function(field){
  * @api private
  */
 
-ResponseBase.prototype._setHeaderProperties = function(header){
-    // TODO: moar!
-    // TODO: make this a util
+ResponseBase.prototype._setHeaderProperties = function (header) {
+  // TODO: moar!
+  // TODO: make this a util
 
-    // content-type
-    var ct = header['content-type'] || '';
-    this.type = utils.type(ct);
+  // content-type
+  var ct = header['content-type'] || '';
+  this.type = utils.type(ct);
 
-    // params
-    var params = utils.params(ct);
-    for (var key in params) this[key] = params[key];
+  // params
+  var params = utils.params(ct);
+  for (var key in params) {
+    this[key] = params[key];
+  }this.links = {};
 
-    this.links = {};
-
-    // links
-    try {
-        if (header.link) {
-            this.links = utils.parseLinks(header.link);
-        }
-    } catch (err) {
-        // ignore
+  // links
+  try {
+    if (header.link) {
+      this.links = utils.parseLinks(header.link);
     }
+  } catch (err) {
+    // ignore
+  }
 };
 
 /**
@@ -1903,44 +1918,39 @@ ResponseBase.prototype._setHeaderProperties = function(header){
  * @api private
  */
 
-ResponseBase.prototype._setStatusProperties = function(status){
-    var type = status / 100 | 0;
+ResponseBase.prototype._setStatusProperties = function (status) {
+  var type = status / 100 | 0;
 
-    // status / class
-    this.status = this.statusCode = status;
-    this.statusType = type;
+  // status / class
+  this.status = this.statusCode = status;
+  this.statusType = type;
 
-    // basics
-    this.info = 1 == type;
-    this.ok = 2 == type;
-    this.redirect = 3 == type;
-    this.clientError = 4 == type;
-    this.serverError = 5 == type;
-    this.error = (4 == type || 5 == type)
-        ? this.toError()
-        : false;
+  // basics
+  this.info = 1 == type;
+  this.ok = 2 == type;
+  this.redirect = 3 == type;
+  this.clientError = 4 == type;
+  this.serverError = 5 == type;
+  this.error = 4 == type || 5 == type ? this.toError() : false;
 
-    // sugar
-    this.accepted = 202 == status;
-    this.noContent = 204 == status;
-    this.badRequest = 400 == status;
-    this.unauthorized = 401 == status;
-    this.notAcceptable = 406 == status;
-    this.forbidden = 403 == status;
-    this.notFound = 404 == status;
+  // sugar
+  this.accepted = 202 == status;
+  this.noContent = 204 == status;
+  this.badRequest = 400 == status;
+  this.unauthorized = 401 == status;
+  this.notAcceptable = 406 == status;
+  this.forbidden = 403 == status;
+  this.notFound = 404 == status;
 };
-
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-var ERROR_CODES = [
-  'ECONNRESET',
-  'ETIMEDOUT',
-  'EADDRINFO',
-  'ESOCKETTIMEDOUT'
-];
+"use strict";
+
+
+var ERROR_CODES = ['ECONNRESET', 'ETIMEDOUT', 'EADDRINFO', 'ESOCKETTIMEDOUT'];
 
 /**
  * Determine if a request should be retried.
@@ -1960,7 +1970,9 @@ module.exports = function shouldRetry(err, res) {
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
 /**
@@ -1971,7 +1983,7 @@ module.exports = function shouldRetry(err, res) {
  * @api private
  */
 
-exports.type = function(str){
+exports.type = function (str) {
   return str.split(/ *; */).shift();
 };
 
@@ -1983,8 +1995,8 @@ exports.type = function(str){
  * @api private
  */
 
-exports.params = function(str){
-  return str.split(/ *; */).reduce(function(obj, str){
+exports.params = function (str) {
+  return str.split(/ *; */).reduce(function (obj, str) {
     var parts = str.split(/ *= */);
     var key = parts.shift();
     var val = parts.shift();
@@ -2002,8 +2014,8 @@ exports.params = function(str){
  * @api private
  */
 
-exports.parseLinks = function(str){
-  return str.split(/ *, */).reduce(function(obj, str){
+exports.parseLinks = function (str) {
+  return str.split(/ *, */).reduce(function (obj, str) {
     var parts = str.split(/ *; */);
     var url = parts[0].slice(1, -1);
     var rel = parts[1].split(/ *= */)[1].slice(1, -1);
@@ -2020,7 +2032,7 @@ exports.parseLinks = function(str){
  * @api private
  */
 
-exports.cleanHeader = function(header, shouldStripCookie){
+exports.cleanHeader = function (header, shouldStripCookie) {
   delete header['content-type'];
   delete header['content-length'];
   delete header['transfer-encoding'];
@@ -2041,6 +2053,14 @@ exports.cleanHeader = function(header, shouldStripCookie){
  * Created by tmkasun on 1/14/17.
  */
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var request = __webpack_require__(1);
 // var utils = require('./utils');
 
@@ -2048,52 +2068,88 @@ var request = __webpack_require__(1);
  * This is an abstract parent class for all types of map services, This initialize the axios connection with base URI for
  * knnect APIs
  */
-class MapService {
-    /**
-     * Create single instance of axios client to make connections with back end apis
-     */
-    constructor() {
-        this.service_endpoint = "/apis/";
-        this.baseURL = 'http://localhost:8000/apis';
-        this.client = request;
-        // this.client.domain = this.baseURL;
-    }
-}
+
+var MapService =
+/**
+ * Create single instance of axios client to make connections with back end apis
+ */
+function MapService() {
+    _classCallCheck(this, MapService);
+
+    this.service_endpoint = "/apis/";
+    this.baseURL = location.origin + '/apis';
+    this.client = request;
+    // this.client.domain = this.baseURL;
+};
 
 /**
  * LK Stands for Last Known and LKState retrive the Last Know states of an object or get current states of all available
  * spatial objects
  */
-class LKStates extends MapService {
-    /**
-     * Get all the spatial objects last know state from the persistent storage
-     * @param callback {function} A function to call in the success call to the api
-     * @returns {Promise} Always return an promise object which may chained the a callback method if given when invoking
-     */
-    getAll(callback = false) {
-        var response = this.client.get(this.baseURL + '/lk_states');
-        if (callback) {
-            return response.then(callback);
-        } else {
-            return response;
-        }
+
+
+var LKStates = function (_MapService) {
+    _inherits(LKStates, _MapService);
+
+    function LKStates() {
+        _classCallCheck(this, LKStates);
+
+        return _possibleConstructorReturn(this, (LKStates.__proto__ || Object.getPrototypeOf(LKStates)).apply(this, arguments));
     }
-}
+
+    _createClass(LKStates, [{
+        key: 'getAll',
+
+        /**
+         * Get all the spatial objects last know state from the persistent storage
+         * @param callback {function} A function to call in the success call to the api
+         * @returns {Promise} Always return an promise object which may chained the a callback method if given when invoking
+         */
+        value: function getAll() {
+            var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+            var response = this.client.get(this.baseURL + '/lk_states');
+            if (callback) {
+                return response.then(callback);
+            } else {
+                return response;
+            }
+        }
+    }]);
+
+    return LKStates;
+}(MapService);
 
 /**
  * This class handle and wrap all the backend service calls related to Spatial Object Activities
  */
-class SpatialActivityService extends MapService {
-    /**
-     *
-     * @param object_id {String} Id of an object i:e: IMEI , Registration number or UUID
-     * @param limit {Number} Number of records needs to be fetched.
-     */
-    getHistory(object_id, limit) {
-        var response = this.client.get(this.baseURL + '/session_path/' + object_id).query({limit: limit});
-        return response;
+
+
+var SpatialActivityService = function (_MapService2) {
+    _inherits(SpatialActivityService, _MapService2);
+
+    function SpatialActivityService() {
+        _classCallCheck(this, SpatialActivityService);
+
+        return _possibleConstructorReturn(this, (SpatialActivityService.__proto__ || Object.getPrototypeOf(SpatialActivityService)).apply(this, arguments));
     }
-}
+
+    _createClass(SpatialActivityService, [{
+        key: 'getHistory',
+
+        /**
+         *
+         * @param object_id {String} Id of an object i:e: IMEI , Registration number or UUID
+         * @param limit {Number} Number of records needs to be fetched.
+         */
+        value: function getHistory(object_id, limit) {
+            var response = this.client.get(this.baseURL + '/session_path/' + object_id).query({ limit: limit });
+            return response;
+        }
+    }]);
+
+    return SpatialActivityService;
+}(MapService);
 
 window.LKStates = LKStates;
 window.SpatialActivityService = SpatialActivityService;
@@ -2104,6 +2160,9 @@ module.exports.SpatialActivityService = SpatialActivityService;
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
 /**
  * Created by tmkasun on 2/12/17.
  */
@@ -2113,13 +2172,13 @@ function registerHandlers() {
         var sp_service = new services.SpatialActivityService();
         var data = $(this).parents().siblings().closest('.marker-data').data();
         var promised_history = sp_service.getHistory(data.id);
-        promised_history.then(
-            (response, id = data.id) => {
-                let status = response.status;
-                let history_data = response.body;
-                currentSpatialObjects[id].drawPath(history_data);
-            }
-        );
+        promised_history.then(function (response) {
+            var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : data.id;
+
+            var status = response.status;
+            var history_data = response.body;
+            currentSpatialObjects[id].drawPath(history_data);
+        });
     });
 }
 module.exports.registerHandlers = registerHandlers;
@@ -2127,6 +2186,9 @@ module.exports.registerHandlers = registerHandlers;
 /***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 /**
  * Created by tmkasun on 1/14/17.
@@ -2144,7 +2206,7 @@ var handlers = __webpack_require__(9);
 var toggled = false;
 function focusOnSpatialObject(objectId) {
 
-    var spatialObject = currentSpatialObjects[objectId];// (local)
+    var spatialObject = currentSpatialObjects[objectId]; // (local)
     if (!spatialObject) {
         $.UIkit.notify({
             message: "Spatial Object <span style='color:red'>" + objectId + "</span> not in the Map!!",
@@ -2157,30 +2219,26 @@ function focusOnSpatialObject(objectId) {
     clearFocus(); // Clear current focus if any
     selectedSpatialObject = objectId; // (global) Why not use 'var' other than implicit declaration http://stackoverflow.com/questions/1470488/what-is-the-function-of-the-var-keyword-and-when-to-use-it-or-omit-it#answer-1471738
 
-    map.setView(spatialObject.marker.getLatLng(), 17, {animate: true}); // TODO: check the map._layersMaxZoom and set the zoom level accordingly
+    map.setView(spatialObject.marker.getLatLng(), 17, { animate: true }); // TODO: check the map._layersMaxZoom and set the zoom level accordingly
 
     $('#objectInfo').find('#objectInfoId').html(selectedSpatialObject);
     spatialObject.marker.openPopup();
     if (!toggled) {
-        $('#objectInfo').animate({width: 'toggle'}, 100);
+        $('#objectInfo').animate({ width: 'toggle' }, 100);
         toggled = true;
     }
     getAlertsHistory(objectId);
     spatialObject.drawPath();
     setTimeout(function () {
         createChart();
-        chart.load({columns: [spatialObject.speedHistory.getArray()]});
+        chart.load({ columns: [spatialObject.speedHistory.getArray()] });
     }, 100);
 }
-
 
 function Alert(type, message, level) {
     this.type = type;
     this.message = message;
-    if (level)
-        this.level = level;
-    else
-        this.level = 'info';
+    if (level) this.level = level;else this.level = 'info';
 
     this.notify = function () {
         $.UIkit.notify({
@@ -2189,11 +2247,11 @@ function Alert(type, message, level) {
             timeout: ApplicationOptions.constance.NOTIFY_INFO_TIMEOUT,
             pos: 'bottom-left'
         });
-    }
+    };
 }
 
 function LocalStorageArray(id) {
-    if (typeof (sessionStorage) === 'undefined') {
+    if (typeof sessionStorage === 'undefined') {
         // Sorry! No Web Storage support..
         return ['speed']; // TODO: fetch this array from backend DB rather than keeping as in-memory array
     }
@@ -2221,7 +2279,7 @@ function LocalStorageArray(id) {
         this.length += 1;
     };
     this.isEmpty = function () {
-        return (this.getArray().length === 0);
+        return this.getArray().length === 0;
     };
     this.splice = function (index, howmany) {
         var currentArray = this.getArray();
@@ -2242,7 +2300,7 @@ function showAlertInMap(alertData) {
     var state = $(alertData).attr("data-state");
     var information = $(alertData).attr("data-information");
 
-    var alertLatLngPoint = L.latLng(latitude,longitude);
+    var alertLatLngPoint = L.latLng(latitude, longitude);
 
     var alertOccouredArea = L.circle(alertLatLngPoint, 10, {
         color: '#FF9900',
@@ -2250,12 +2308,11 @@ function showAlertInMap(alertData) {
         fillOpacity: 0.5
     }).addTo(map);
 
-    alertOccouredArea.bindPopup("Id: <b>"+id+"</b><br>"+
-        "State: <b>"+state+"</b><br>"+
-        "Information: <b>"+information+"</b><br>"
-    ).openPopup();
-    $(alertOccouredArea._popup._closeButton).on("click",function(){map.removeLayer(alertOccouredArea)});
-    map.setView(alertLatLngPoint,18);
+    alertOccouredArea.bindPopup("Id: <b>" + id + "</b><br>" + "State: <b>" + state + "</b><br>" + "Information: <b>" + information + "</b><br>").openPopup();
+    $(alertOccouredArea._popup._closeButton).on("click", function () {
+        map.removeLayer(alertOccouredArea);
+    });
+    map.setView(alertLatLngPoint, 18);
 
     /* TODO: for reference <Update lib or remove if not in use>: This `R`(RaphaelLayer: https://github.com/dynmeth/RaphaelLayer) library is dam buggy can't use it reliably */
     /*
@@ -2266,8 +2323,6 @@ function showAlertInMap(alertData) {
      {'stroke': '#FF3E2F', 'stroke-width': 3});
      map.addLayer(alertPulse);
      */
-
-
 }
 
 window.LocalStorageArray = LocalStorageArray;

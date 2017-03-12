@@ -5,7 +5,18 @@ module.exports = {
         utils: './utils.js',
     },
     output: {
-        path: './dist',
+        path: './bin',
         filename: '[name].bundle.js',
+    },
+    module: {
+        loaders: [
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                query: {
+                    presets: ['es2015']
+                }
+            }
+        ]
     }
 };

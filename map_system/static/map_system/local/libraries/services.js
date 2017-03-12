@@ -16,7 +16,7 @@ class MapService {
      */
     constructor() {
         this.service_endpoint = "/apis/";
-        this.baseURL = 'http://geo.knnect.com/apis';
+        this.baseURL = location.origin + '/apis';
         this.client = request;
         // this.client.domain = this.baseURL;
     }
