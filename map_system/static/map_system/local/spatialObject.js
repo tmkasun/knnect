@@ -358,8 +358,13 @@ class SpatialObject {
         }
     }
 
-    updatePath(LatLng) {
-        this.path[this.path.length - 1].addLatLng(LatLng); // add LatLng to last section
+    updatePath(lat_lng) {
+        if (this.path.length !== 0) {
+            this.path[this.path.length - 1].addLatLng(lat_lng); // add LatLng to last section
+        } else {
+            var new_path = new L.polyline(lat_lng, this.getIconForState());
+            this.path.push(new_path)
+        }
     }
 
     /**
