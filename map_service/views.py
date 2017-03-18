@@ -1,131 +1,55 @@
-from django.http.response import HttpResponse, JsonResponse, Http404
-from django.shortcuts import render
-
-from lib.wso2.services.eventProcessorAdminService import EventProcessor
-import os
-import re
-
+from rest_framework_mongoengine import viewsets
+from mongoengine.queryset.visitor import Q
+from map_service.serializers import LkStateSerializer
+from map_service.serializers import SpatialObjectsSerializer
+from map_service.models import LkState
+from map_service.models import SpatialObjects
 from datetime import datetime
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from django.views.decorators.csrf import csrf_exempt
+from map_service.lib.JsonResponseFactory import JSONResponseFactory
+from map_service.lib.SpatialUtils import SpatialUtils
+from map_service.lib.SpatialUtils import SpatialCons
 
 
-def proximity_alert(request):
-    proximity_distance = -1  # TODO: This value should fetch from organization.globals.proximity_distance {MongoDB}
-    proximity_time = -1  # TODO: This value should fetch from organization.globals.proximity_time {MongoDB}
+# https://medium.com/@vasjaforutube/django-mongodb-django-rest-framework-mongoengine-ee4eb5857b9a#.pzfldga4w
 
-    context = {
-        'proximity_distance': proximity_distance,
-        'proximity_time': proximity_time,
-    }
-    return render(request, 'map_service/alerts/proximity.html', context=context)
+class LastKnownService(object):
+    # serializer_class = LkStateSerializer
+    # queryset = LkState.objects.all()
+    # many = True
 
 
-def set_proximity_alert(request):
-    evnt_proc = EventProcessor()
-    proximity_distance = request.POST['proximityDistance']
-    proximity_time = request.POST['proximityTime']
-    alert_template = open(
-        os.path.join(BASE_DIR, 'map_service/templates/map_service/xml/geo_proximity_alert.xml')).read()
-
-    time_placeholder = re.compile(r'\$proximityTime')
-    alert_query = time_placeholder.sub(proximity_time, alert_template)
-
-    distance_placeholder = re.compile(r'\$proximityDistance')
-    alert_query = distance_placeholder.sub(proximity_distance, alert_query)
-
-    # TODO: Check why the response is {None} object
-    response = evnt_proc.editActiveExecutionPlanConfiguration(alert_query, 'geo_proximity_alert')
-    return JsonResponse({'status': True})
+    @csrf_exempt
+    def lk_states(self):
+        states = LkState.objects.all()
+        serialized = LkStateSerializer(states, many=True)
+        return JSONResponseFactory(serialized.data).get_response()
 
 
-def get_speed_alert(request):
-    speed_value = -1  # TODO: This value should fetch from organization.globals.speed_limit {MongoDB}
-    context = {
-        'speed_value': speed_value
-    }
-    return render(request, 'map_service/alerts/speed.html', context=context)
+class ObjectService(object):
+    @csrf_exempt
+    def session_path(request, id):
+        session = LkState.objects.get(id=id)
+        limit = request.GET.get('limit', False)
+        session_start_time = session.lk_properties['updated_at']
+        current_time = datetime.now().strftime(SpatialCons.DATE_TIME_FORMAT)
+        db_query = Q(id=id) & Q(properties__created_at__lte=current_time) & Q(
+            properties__created_at__gte=session_start_time)
+        path = SpatialObjects.objects(db_query).limit(int(limit)) if limit else SpatialObjects.objects(db_query)
+        serialized_path = SpatialObjectsSerializer(path, many=True)
+        return JSONResponseFactory(serialized_path.data).get_response()
 
-
-def set_speed_alert(request):
-    speed_limit = request.POST['speedAlertValue']
-    alert_template = open(os.path.join(BASE_DIR, 'map_service/templates/map_service/xml/geo_speed_alert.xml'))
-    placeholder_pattern = re.compile(r'\$speedAlertValue')
-    alert_query = placeholder_pattern.sub(speed_limit, alert_template.read())
-
-    evnt_proc = EventProcessor()
-    exe_plan_name = 'geo_speed_alert'
-    exe_plan = evnt_proc.getActiveExecutionPlanConfiguration(exe_plan_name)
-    if exe_plan:
-        response = evnt_proc.editActiveExecutionPlanConfiguration(alert_query, exe_plan_name)
-    else:
-        response = evnt_proc.deployExecutionPlanConfigurationFromConfigXml(alert_query)
-
-    return JsonResponse({'status': True})
-
-
-def geofence_alert(request):
-    """
-    A geofence is a virtual barrier. Programs that incorporate geo-fencing allow an administrator to set up triggers
-    so when a device enters (or exits) the boundaries defined by the administrator, a popup message or email alert is sent.
-    :param request:
-    :return:
-    """
-    geofences = [
-        {
-            'areaName': 'Test_name_1',
-            'queryName': 'Testing_query_name_1',
-            'createdTime': datetime.now(),
-            'geoJson': {
-                'geoJsonStructure': True
-            }
-        }, {
-            'areaName': 'Test_name_2',
-            'queryName': 'Testing_query_name_2',
-            'createdTime': datetime.now(),
-            'geoJson': {
-                'geoJsonStructure': True
-            }
-        }, {
-            'areaName': 'Test_name_3',
-            'queryName': 'Testing_query_name_3',
-            'createdTime': datetime.now(),
-            'geoJson': {
-                'geoJsonStructure': True
-            }
-        },
-    ]
-    context = {
-        'geofences': geofences
-    }
-    return render(request, 'map_service/alerts/within.html', context=context)
-
-
-def set_geofence_alert(request):
-    queryName = 'geo_within_' + request.POST[
-        'queryName'] + '_alert'  # TODO: Use this name to store the query in Database or remove this completly and use the area name only
-    areaName = request.POST['areaName']
-    geoFenceGeoJSON = request.POST['geoFenceGeoJSON']
-
-    alert_template = open(os.path.join(BASE_DIR, 'map_service/templates/map_service/xml/geo_within_alert.xml'))
-    placeholder_pattern = re.compile(r'\$areaName')
-    alert_query = placeholder_pattern.sub(areaName, alert_template.read())
-
-    placeholder_pattern = re.compile(r'\$geoFenceGeoJSON')
-    alert_query = placeholder_pattern.sub(geoFenceGeoJSON, alert_query)
-
-    placeholder_pattern = re.compile(r'\$executionPlanName')
-    alert_query = placeholder_pattern.sub(queryName, alert_query)
-
-    evnt_proc = EventProcessor()
-    evnt_proc.deployExecutionPlanConfigurationFromConfigXml(alert_query)
-
-    return JsonResponse({'status': True})
-
-
-def get_stationery_alert(request):
-    raise Http404("Not implemented yet")
-
-
-def service_not_available(request):
-    raise Http404("Not implemented yet")
+    @csrf_exempt
+    def history(request, id):
+        try:
+            start_time = request.GET.get(SpatialCons.START_TIME)
+            end_time = request.GET.get(SpatialCons.END_TIME)
+            SpatialUtils.validate_date(start_time)
+            SpatialUtils.validate_date(end_time)
+        except ValueError as e:
+            return JSONResponseFactory({"error": str(e)}, 400).get_response()
+        db_query = Q(id=id) & Q(properties__created_at__lte=end_time) & Q(properties__created_at__gte=start_time)
+        path = SpatialObjects.objects(db_query)
+        serialized_path = SpatialObjectsSerializer(path, many=True)
+        return JSONResponseFactory(serialized_path.data).get_response()

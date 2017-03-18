@@ -89,11 +89,12 @@
         ApplicationOptions.constance.STATIC_URL = "{% static '' %}";
     </script>
      <link rel="stylesheet" href="{% static 'map_system/libraries/app.css' %}">
-
+    <script src="{% static 'map_system/local/spatialObject.js' %}"></script>
+    <script src="{% static 'map_system/local/libraries/bin/utils.bundle.js' %}"></script>
+    <script src="{% static 'map_system/local/libraries/bin/services.bundle.js' %}"></script>
     <script src="{% static 'map_system/local/websocket.js' %}"></script>
     <script src="{% static 'map_system/local/geo_remote.js' %}"></script>
     <script src="{% static 'map_system/local/geo_fencing.js' %}"></script>
-    <script src="{% static 'map_system/local/show_alert_in_map.js' %}"></script>
     <script src="{% static 'map_system/local/ajax_csrf_protect.js' %}"></script>
 
     <!-- Combined and compiled JS with google closure compile-->

@@ -11,8 +11,8 @@ var ApplicationOptions = {
             header: 'grey'
         }
     },
-    constance:{
-        WEB_SOCKET_URL: "ws://geo.knnect.com:9080/ws/data",
+    constance: {
+        WEB_SOCKET_URL: "ws://" + location.hostname + ":9080/ws/data",
         WEB_SOCKET_SERVER: 'aws4.knnect.com', /*TODO: Deprecated */
         WEB_SOCKET_PORT: 9764, /*TODO: Deprecated */
         CEP_WEB_SOCKET_OUTPUT_ADAPTOR_NAME: 'DefaultWebsocketOutputAdaptor', /*TODO: Deprecated */
@@ -27,18 +27,16 @@ var ApplicationOptions = {
         NOTIFY_WARNING_TIMEOUT: 3000,
         NOTIFY_DANGER_TIMEOUT: 9000
     },
-    messages:{
-        app:{
-
-        }
+    messages: {
+        app: {}
     },
     leaflet: {
         iconUrls: {
-            normalIcon: '/static/map_system/images/markers/arrow_normal.png',
+            normalIcon: '/static/map_system/images/markers/car/red-top.png',
             alertedIcon: '/static/map_system/images/markers/arrow_alerted.png',
-            offlineIcon: '/static/map_system/images/markers/arrow_offline.png',
+            offlineIcon: '/static/map_system/images/markers/car/grey-top.png',
             warningIcon: '/static/map_system/images/markers/arrow_warning.png',
-            defaultIcon: '/static/map_system/images/markers/default_icons/marker-icon.png',
+            defaultIcon: '/static/map_system/images/markers/car/red-top.png',
             resizeIcon: '/static/map_system/images/markers/resize.png'
 
         }
@@ -46,15 +44,15 @@ var ApplicationOptions = {
     locale: {
         type: 'sin',
         sin: {
-            websocket:{
-                errors:{
+            websocket: {
+                errors: {
                     'connection': 'වෙබ් සොකට් සම්බන්ධතාවය විසන්ඳිවී ඇත කරුණාකර ඔබගේ අන්තර්ජාල සබදතාවය පරීක්ශාකර බලන්න  '
                 }
             }
         },
         eng: {
             websockt: {
-                errors:{
+                errors: {
                     'connection': 'Something went wrong when trying to connect to WebSocket </br> <b>Please check your internet or Network connection<b/>'
                 }
             }

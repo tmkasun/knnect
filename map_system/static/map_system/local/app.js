@@ -68,45 +68,6 @@ function updateAttribution(e) {
 }
 
 /**
- *
- * @param objectId - Spatial object id , received from websocket
- * @returns {boolean}
- *
- * TODO: when click on a notification alert ? "Uncaught ReferenceError: KM is not defined "
- */
-var toggled = false;
-function focusOnSpatialObject(objectId) {
-
-    var spatialObject = currentSpatialObjects[objectId];// (local)
-    if (!spatialObject) {
-        $.UIkit.notify({
-            message: "Spatial Object <span style='color:red'>" + objectId + "</span> not in the Map!!",
-            status: 'warning',
-            timeout: ApplicationOptions.constance.NOTIFY_WARNING_TIMEOUT,
-            pos: 'top-center'
-        });
-        return false;
-    }
-    clearFocus(); // Clear current focus if any
-    selectedSpatialObject = objectId; // (global) Why not use 'var' other than implicit declaration http://stackoverflow.com/questions/1470488/what-is-the-function-of-the-var-keyword-and-when-to-use-it-or-omit-it#answer-1471738
-
-    map.setView(spatialObject.marker.getLatLng(), 17, {animate: true}); // TODO: check the map._layersMaxZoom and set the zoom level accordingly
-
-    $('#objectInfo').find('#objectInfoId').html(selectedSpatialObject);
-    spatialObject.marker.openPopup();
-    if (!toggled) {
-        $('#objectInfo').animate({width: 'toggle'}, 100);
-        toggled = true;
-    }
-    getAlertsHistory(objectId);
-    spatialObject.drawPath();
-    setTimeout(function () {
-        createChart();
-        chart.load({columns: [spatialObject.speedHistory.getArray()]});
-    }, 100);
-}
-
-/**
  * Unfocused on current searched spatial object, Remove drawn history path, close opened popup and set selectedSpatialObject to null
  */
 function clearFocus() {
@@ -173,6 +134,29 @@ function notifyAlert(message, status) {
     });
 }
 
+/**
+ * Preload spatial objects from the backend via api call, Spatial object state should be persist in database to work
+ * this method
+ */
+function preLoadObjects() {
+    var objectStates = new LKStates();
+    function addObjectsToMap(response) {
+        for (let geoJSON of response.body) {
+            var geoFeature = {
+                "type": "Feature",
+                "geometry": geoJSON.lk_geo_json,
+                "id": geoJSON.id,
+                "properties": geoJSON.lk_properties
+            };
+            var spatialObject = new SpatialObject(geoFeature);
+            spatialObject.update(geoFeature);
+            currentSpatialObjects[spatialObject.id] = spatialObject;
+            currentSpatialObjects[spatialObject.id].geoJson.addTo(map);
+        }
+    }
+    objectStates.getAll(addObjectsToMap);
+}
+preLoadObjects();
 /**
  *
  * @param message {String} - Message need to be displaying
@@ -253,11 +237,6 @@ var layerControl = L.control.groupedLayers(baseLayers, groupedOverlays, {
 }).addTo(map);
 
 var setupWizard;
-// wizard with it's cards initialization.
-$(function () {
-    var options = {submitUrl: "controllers/setup_dashboard.jag"};
-    setupWizard = $("#setup_dashboard").wizard(options);
-});
 
 
 $(".modal").draggable({
@@ -302,9 +281,16 @@ $('#searchbox').typeahead({
         displayKey: 'value',
         source: substringMatcher()
     }).on('typeahead:selected', function ($e, datum) {
-        objectId = datum['value'];
-        focusOnSpatialObject(objectId)
-    });
+    objectId = datum['value'];
+    focusOnSpatialObject(objectId)
+});
+
+// Run once the DOM is loaded
+$(function () {
+    registerHandlers();
+    var options = {submitUrl: "controllers/setup_dashboard.jag"};
+    setupWizard = $("#setup_dashboard").wizard(options);
+});
 
 
 // TODO: Remove tile server and web map service import calls if not in use
