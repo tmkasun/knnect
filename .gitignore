@@ -1,4 +1,4 @@
-# Byte-compiled / optimized / DLL files
+led / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -17,4 +17,9 @@ node_modules/
 tests/coverage_html/
 tests/.coverage
 build/
+bin/
 tests/report/
+testing/
+production_static/
+/map_system/static/map_system/local/libraries/node_modules/
+/map_system/static/map_system/local/libraries/npm-debug.log
