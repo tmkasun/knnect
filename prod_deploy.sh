@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # TODO: This needs to be replaced with proper puppet script
-branch="tornado-backend"
+branch="master"
 
 echo "######### {INFO} : Deploying for production... #########"
 echo "######### {INFO} : Current GIT status #########"
