@@ -1,41 +1,28 @@
-<nav class="navbar navbar-inverse" role="navigation" style="width: 60%">
-    <div class="navbar-header">
-        <div class="navbar-icon-container">
-            <a href="#left_side_pannel" data-uk-offcanvas class="navbar-icon pull-right visible-xs"
-                    ><i class="fa fa-bars fa-lg" style="color: #FF9900"></i></a>
-            <a href="#" class="navbar-icon pull-right visible-xs"
-               onclick="$('.navbar-collapse').collapse('toggle');return false;"><i class="fa fa-search fa-lg"
-                                                                                   style="color: #FF9900"></i></a>
-        </div>
-    </div>
-    <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-            <li class="hidden-xs"><a href="#left_side_pannel" data-uk-offcanvas>
-                <i class="fa fa-list" style="color: #FF9900"></i></a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
+<nav class="indigo darken-1">
+    <div class="nav-wrapper">
+        <a href="#!" class="brand-logo">Knnect</a>
+        <ul class="right hide-on-med-and-down element-with-search">
             <li>
-                <form id="mapSearch" class="navbar-form" role="search"
-                      onsubmit="focusOnSpatialObject($(this).find('#searchbox').val());return false;">
-                    <div class="form-group has-feedback">
-                        <input autofocus="true" id="searchbox" type="text" placeholder="Search"
-                               class="form-control typeahead">
-                        <span id="searchicon" class="fa fa-search form-control-feedback"></span>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">search</i>
+                        <input type="text" id="searchbox" class="autocomplete" data-activates="singleDropdown"
+                               data-beloworigin="true" autocomplete="off">
+                        <label for="searchbox">IMEI / Vehicle #</label>
                     </div>
-                    <input style="visibility: hidden; position: fixed;" type="submit"/>
-                </form>
+                    <ul id="singleDropdown" class="dropdown-content ac-dropdown autocomplete-content"></ul>
+                </div>
             </li>
-
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">More</a>
-                <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="#" data-toggle="collapse" data-target=".navbar-collapse.in"
-                           onclick="$('#aboutModal').modal('show'); return false;">About</a>
-                    </li>
-                    <li><a href="#">Doc</a></li>
+            <li>
+                <a class="btn-floating waves-effect waves-light red"><i class="material-icons">add</i></a>
+            </li>
+            <!-- Dropdown Trigger -->
+            <li><a class="dropdown-button" href="#!" data-activates="dropdown1"><i class="material-icons right">more_vert</i></a>
+                <ul id="dropdown1" class="dropdown-content">
+                    <li><a href="#!">Settings</a></li>
+                    <li><a href="#!">About</a></li>
                     <li class="divider"></li>
-                    <li><a href="controllers/logout.jag">Logout</a></li>
+                    <li><a href="#!">Logout</a></li>
                 </ul>
             </li>
         </ul>

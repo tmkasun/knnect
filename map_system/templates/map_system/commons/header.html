@@ -22,10 +22,13 @@
     <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
     {#    Load Bootstrap from common knnector static files #}
 
-    <script src="{% static 'jquery/jquery-3.2.0.slim.min.js' %}"></script>
+    <script src="{% static 'jquery/jquery-3.2.0.min.js' %}"></script>
+    <script src="{% static 'noty/jquery.noty.packaged.min.js' %}"></script>
 
     <link rel="stylesheet" href="{% static 'map_system/libraries/materialize/css/materialize.min.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="{% static 'map_system/libraries/materialize/js/materialize.min.js' %}"></script>
+    <script src="{% static 'map_system/libraries/materialize/autocomplete/jquery.materialize-autocomplete.js' %}"></script>
 
     <!-- Leaflet styles -->
     {#    TODO: Have use Leaflet Beta relese 1.0 , Replace with latest production version when available(JS only) #}
@@ -91,26 +94,9 @@
         /*
         TODO: Move this styles to separate CSS for clarity.
         */
-        .navbar {
-            background-color: rgba(54, 51, 45, 0.7);
-            background: rgba(54, 51, 45, 0.7);
-            color: rgba(0, 0, 0, 0.8);
-            border-radius: 0px 0px 0px 0px;
-            -webkit-box-shadow: 0px 16px 29px -17px rgba(33, 20, 4, 1);
-            -moz-box-shadow: 0px 16px 29px -17px rgba(33, 20, 4, 1);
-            box-shadow: 0px 16px 29px -17px rgba(33, 20, 4, 1);
-            border: none;
-            margin: auto;
-            z-index: 1000;
-        }
 
         #mapSearch {
             border: 0;
-        }
-
-        #container {
-            position: fixed;
-            top: 0px;
         }
 
         .leaflet-top {

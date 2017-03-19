@@ -1,15 +1,12 @@
 {% extends 'map_system/commons/header.html' %}
 {% load staticfiles %}
 {% block body_context %}
+    {% include 'map_system/content/nav_bar.html' %}
     <div id="container">
         <!-- Sidebar -->
         <div id="map"></div>
 
     </div>
-
-{#    {% include 'map_system/content/tools_panel.html' %}#}
-
-    {% include 'map_system/content/nav_bar.html' %}
 
     <div id="objectInfo" style="background: darkgray;display: none;border-radius: 13px;height: 94%;padding: 0"
          class="col-md-2 pull-right">

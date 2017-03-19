@@ -33,13 +33,13 @@ function success(position) {
     var browserLongitude = position.coords.longitude;
     map.setView([browserLatitude, browserLongitude]);
     map.setZoom(13);
-
-
-    $.UIkit.notify({
-        message: "Map view set to browser's location",
-        status: 'info',
+    noty({
+        text: "Map view set to browser's location",
+        type: "success",
+        dismissQueue: true,
         timeout: ApplicationOptions.constance.NOTIFY_INFO_TIMEOUT,
-        pos: 'top-center'
+        layout: 'top',
+        theme: 'relax',
     });
 };
 
@@ -140,6 +140,7 @@ function notifyAlert(message, status) {
  */
 function preLoadObjects() {
     var objectStates = new LKStates();
+
     function addObjectsToMap(response) {
         for (let geoJSON of response.body) {
             var geoFeature = {
@@ -154,6 +155,7 @@ function preLoadObjects() {
             currentSpatialObjects[spatialObject.id].geoJson.addTo(map);
         }
     }
+
     objectStates.getAll(addObjectsToMap);
 }
 preLoadObjects();
@@ -238,10 +240,10 @@ var layerControl = L.control.groupedLayers(baseLayers, groupedOverlays, {
 
 var setupWizard;
 
-
-$(".modal").draggable({
-    handle: ".modal-header"
-});
+/*
+ $(".modal").draggable({
+ handle: ".modal-header"
+ });*/
 
 //Clear modal content for reuse the wrapper by other functions
 $('body').on('hidden.bs.modal', '.modal', function (modal) {
@@ -251,42 +253,66 @@ $('body').on('hidden.bs.modal', '.modal', function (modal) {
 
 /* TypeAhead search functionality */
 
+/*var substringMatcher = function () {
+ return function findMatches(q, cb) {
+ var matches, substrRegex;
+ matches = [];
+ substrRegex = new RegExp(q, 'i');
+ $.each(currentSpatialObjects, function (i, str) {
+ if (substrRegex.test(i)) {
+ matches.push({value: i});
+ }
+ });
+
+ cb(matches);
+ };
+ };*/
+
 /* Highlight search box text on click */
-$("#searchbox").click(function () {
-    $(this).select();
-});
+/*$("#searchbox").click(function () {
+ $(this).select();
+ });*/
 
-var substringMatcher = function () {
-    return function findMatches(q, cb) {
-        var matches, substrRegex;
-        matches = [];
-        substrRegex = new RegExp(q, 'i');
-        $.each(currentSpatialObjects, function (i, str) {
-            if (substrRegex.test(i)) {
-                matches.push({value: i});
-            }
-        });
-
-        cb(matches);
-    };
-};
-
-$('#searchbox').typeahead({
-        hint: true,
-        highlight: true,
-        minLength: 1
-    },
-    {
-        name: 'speed',
-        displayKey: 'value',
-        source: substringMatcher()
-    }).on('typeahead:selected', function ($e, datum) {
-    objectId = datum['value'];
-    focusOnSpatialObject(objectId)
-});
+/*$('#searchbox').typeahead({
+ hint: true,
+ highlight: true,
+ minLength: 1
+ },
+ {
+ name: 'speed',
+ displayKey: 'value',
+ source: substringMatcher()
+ }).on('typeahead:selected', function ($e, datum) {
+ objectId = datum['value'];
+ focusOnSpatialObject(objectId)
+ });*/
 
 // Run once the DOM is loaded
 $(function () {
+    var single = $('#searchbox').materialize_autocomplete({
+        multiple: {
+            enable: false
+        },
+        dropdown: {
+            el: '#singleDropdown'
+        },
+        getData: function (value, callback) {
+            var data = [];
+            for (var key in currentSpatialObjects) {
+                if (currentSpatialObjects.hasOwnProperty(key)) {
+                    data.push({
+                        id: currentSpatialObjects[key].id,
+                        text: currentSpatialObjects[key].id,
+                    });
+                }
+            }
+            callback(value, data)
+        },
+        onSelect: function (item) {
+            var objectId = item.id;
+            focusOnSpatialObject(objectId)
+        }
+    });
     registerHandlers();
     var options = {submitUrl: "controllers/setup_dashboard.jag"};
     setupWizard = $("#setup_dashboard").wizard(options);

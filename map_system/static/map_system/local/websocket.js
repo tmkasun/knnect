@@ -25,11 +25,15 @@ function waitForSocketConnection(socket, callback) {
                 waitTime += 400;
                 var messageContent = "Retry after " + waitTime / 1000 + " Seconds...";
                 if (!notifyObject) {
-                    notifyObject = $.UIkit.notify({
-                        message: messageContent,
-                        status: 'warning',
-                        timeout: 0,
-                        pos: 'top-center'
+
+                    notifyObject = noty({
+                        text: messageContent,
+                        type: 'warning',
+                        dismissQueue: true,
+                        modal: true,
+                        progressBar: true,
+                        layout: 'top',
+                        theme: 'relax',
                     });
                 }
                 notifyObject.content(messageContent);
@@ -45,11 +49,13 @@ var webSocketOnOpen = function () {
     var message_status = 'success';
 
     if (!notifyObject) {
-        notifyObject = $.UIkit.notify({
-            message: message_content,
-            status: message_status,
+        notifyObject = noty({
+            text: message_content,
+            type: message_status,
+            dismissQueue: true,
             timeout: ApplicationOptions.constance.NOTIFY_SUCCESS_TIMEOUT,
-            pos: 'top-center'
+            layout: 'top',
+            theme: 'relax',
         });
     }
     else {
@@ -75,11 +81,15 @@ var webSocketOnError = function (e) {
 };
 
 var webSocketOnClose = function (e) {
-    $.UIkit.notify({
-        message: 'Connection lost with server!!',
-        status: 'danger',
+    noty({
+        text: 'Connection lost with server!!',
+        type: 'error',
+        dismissQueue: true,
+        modal: true,
+        progressBar: true,
         timeout: ApplicationOptions.constance.NOTIFY_DANGER_TIMEOUT,
-        pos: 'top-center'
+        layout: 'top',
+        theme: 'relax',
     });
     waitForSocketConnection(websocket);
 };
