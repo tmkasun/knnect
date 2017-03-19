@@ -20,7 +20,7 @@ function initializeMap() {
     });
 
     map.on('click', function (e) {
-        $.UIkit.offcanvas.hide();//[force = false] no animation
+        //[force = false] no animation
     });
 }
 
@@ -41,19 +41,21 @@ function success(position) {
         layout: 'top',
         theme: 'relax',
     });
-};
+}
 
 /**
  * Show error message if unable to get browser location
  */
 function error() {
-    $.UIkit.notify({
-        message: "Unable to find browser location!",
-        status: 'warning',
+    noty({
+        text: "Unable to find browser location!",
+        type: "warning",
+        dismissQueue: true,
         timeout: ApplicationOptions.constance.NOTIFY_WARNING_TIMEOUT,
-        pos: 'top-center'
+        layout: 'top',
+        theme: 'relax',
     });
-};
+}
 
 /**
  * Change map attribution text, Attribution link is in Bottom Right corner
@@ -83,10 +85,7 @@ function clearFocus() {
  * Close all opened modal(s) and hide offcanvas
  */
 function closeAll() {
-    $('.modal').modal('hide');
-    setTimeout(function () {
-        $.UIkit.offcanvas.hide()
-    }, 100);
+
 }
 
 /**
@@ -126,11 +125,13 @@ function notifyAlert(message, status) {
     if (typeof status === 'undefined') {
         status = 'warning';
     }
-    return $.UIkit.notify({
-        message: "Alert: " + message,
-        status: status,
-        timeout: 0, // Show infinitely until close otherwise
-        pos: 'top-center'
+    return noty({
+        text: "Alert: " + message,
+        type: status,
+        dismissQueue: true,
+        timeout: ApplicationOptions.constance.NOTIFY_INFO_TIMEOUT,
+        layout: 'top',
+        theme: 'relax',
     });
 }
 
