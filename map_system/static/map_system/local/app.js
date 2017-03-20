@@ -314,6 +314,16 @@ $(function () {
             focusOnSpatialObject(objectId)
         }
     });
+    var side_bar_button = $(".side-nav-bar");
+    side_bar_button.sideNav({
+        menuWidth: 400, // Default is 300
+        closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+        draggable: false // Choose whether you can drag to open on touch screens
+    });
+    side_bar_button.click(function () {
+        $('#sidenav-overlay').remove();
+    });
+    $('.modal').modal(); /*jQuery Plugin Initialization*/
     registerHandlers();
     var options = {submitUrl: "controllers/setup_dashboard.jag"};
     setupWizard = $("#setup_dashboard").wizard(options);
