@@ -1,10 +1,24 @@
 <!-- Modal Structure -->
-<div id="modal1" class="modal modal-fixed-footer">
+<div id="history-modal" class="modal modal-fixed-footer">
     <div class="modal-content">
-        <h4>Modal Header</h4>
-        <p>A bunch of text</p>
+        <div class="container">
+            <div class="row">
+                <h4>Show Object History</h4>
+                <p>Select a date range</p>
+            </div>
+            <div class="row">
+              <div class="col s6">
+                  <label for="start_date">Select start date : </label>
+                  <input id="start_date" type="date" class="datepicker">
+              </div>
+              <div class="col s6">
+                  <label for="end_date">Select end date : </label>
+                  <input id="end_date" type="date" class="datepicker">
+              </div>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Ok</a>
     </div>
 </div>

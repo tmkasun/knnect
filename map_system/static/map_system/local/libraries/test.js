@@ -10,7 +10,7 @@ function testStates() {
 
 function sessionPathTest() {
     var spatial_obj = new services.SpatialActivityService();
-    var response = spatial_obj.getHistory('868443028828427', 10);
+    var response = spatial_obj.getSessionPath('868443028828427', 10);
     response.then(d => {
         console.log(d.body);
     });

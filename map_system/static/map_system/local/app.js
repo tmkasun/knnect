@@ -324,6 +324,11 @@ $(function () {
         $('#sidenav-overlay').remove();
     });
     $('.modal').modal(); /*jQuery Plugin Initialization*/
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 5, // Creates a dropdown of 15 years to control year
+        format: 'yyyy-mm-dd'
+    });
     registerHandlers();
     var options = {submitUrl: "controllers/setup_dashboard.jag"};
     setupWizard = $("#setup_dashboard").wizard(options);

@@ -51,8 +51,16 @@ class SpatialActivityService extends MapService {
      * @param object_id {String} Id of an object i:e: IMEI , Registration number or UUID
      * @param limit {Number} Number of records needs to be fetched.
      */
-    getHistory(object_id, limit) {
+    getSessionPath(object_id, limit) {
         var response = this.client.get(this.baseURL + '/session_path/' + object_id).query({limit: limit});
+        return response;
+    }
+
+    getHistory(object_id, start_time, end_time) {
+        var response = this.client.get(this.baseURL + '/history/' + object_id).query({
+            start_time: start_time,
+            end_time: end_time
+        });
         return response;
     }
 }
