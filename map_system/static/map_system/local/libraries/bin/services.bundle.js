@@ -2076,8 +2076,9 @@ var MapService =
 function MapService() {
     _classCallCheck(this, MapService);
 
+    var host_origin = typeof location !== 'undefined' ? location.origin : "";
     this.service_endpoint = "/apis/";
-    this.baseURL = location.origin + '/apis';
+    this.baseURL = host_origin + '/apis';
     this.client = request;
     // this.client.domain = this.baseURL;
 };
@@ -2135,15 +2136,24 @@ var SpatialActivityService = function (_MapService2) {
     }
 
     _createClass(SpatialActivityService, [{
-        key: 'getHistory',
+        key: 'getSessionPath',
 
         /**
          *
          * @param object_id {String} Id of an object i:e: IMEI , Registration number or UUID
          * @param limit {Number} Number of records needs to be fetched.
          */
-        value: function getHistory(object_id, limit) {
+        value: function getSessionPath(object_id, limit) {
             var response = this.client.get(this.baseURL + '/session_path/' + object_id).query({ limit: limit });
+            return response;
+        }
+    }, {
+        key: 'getHistory',
+        value: function getHistory(object_id, start_time, end_time) {
+            var response = this.client.get(this.baseURL + '/history/' + object_id).query({
+                start_time: start_time,
+                end_time: end_time
+            });
             return response;
         }
     }]);
@@ -2151,8 +2161,10 @@ var SpatialActivityService = function (_MapService2) {
     return SpatialActivityService;
 }(MapService);
 
-window.LKStates = LKStates;
-window.SpatialActivityService = SpatialActivityService;
+if (typeof window !== 'undefined') {
+    window.LKStates = LKStates;
+    window.SpatialActivityService = SpatialActivityService;
+}
 module.exports.LKStates = LKStates;
 module.exports.SpatialActivityService = SpatialActivityService;
 

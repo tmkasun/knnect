@@ -1,0 +1,117 @@
+<!-- Template HTML components used by JS to inject contents-->
+<div style="display: none">
+
+
+
+
+
+
+
+
+
+    <div id="markerPopup" class="popover top">
+        <div class="row">
+            <div class="col s12 m6">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">Card Title</span>
+                        <p>I am a very simple card. I am good at containing small bits of information.
+                            I am convenient because I require little markup to use effectively.</p>
+                    </div>
+                    <div class="card-action">
+                        <a href="#">This is a link</a>
+                        <a href="#">This is a link</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% comment %}<span class="marker-data"></span>
+        <div class="arrow"></div>
+        <h3 class="popover-title">ID <span id="objectId"></span></h3>
+
+        <div class="popover-content">
+            <h6>Info</h6>
+
+            <p id="information" class="bg-primary" style="margin: 0px;padding: 0px;"></p>
+            <h6>Speed<span class="label label-primary pull-right"><span id="speed"></span> km/h</span></h6>
+            <h6>Heading<span id="heading" class="label label-primary pull-right"></span></h6>
+            <button type="button" class="btn btn-info btn-xs">Details</button>
+        </div>{% endcomment %}
+    </div>
+    <div id="setWithinAlert">
+        <form role="form" style="width: auto;">
+            <div class="form-group">
+                <label class="text-primary" for="queryName">Query name</label>
+                <input class="form-control" id="queryName" placeholder="Query name" type="text">
+                <span class="help-block">Can use this name to locate the execution plan</span>
+
+                <label class="text-primary" for="areaName">Fence name</label>
+                <input class="form-control" id="areaName" placeholder="Fence name" type="text">
+                <span class="help-block">Name of the selected area(i.e colombo)</span>
+            </div>
+            <div>
+                <div class="btn-group btn-group-sm btn-group-justified">
+                    <div class="btn-group">
+                        <button id="addWithinAlert" onclick="setWithinAlert($(this).attr('leaflet_id'))"
+                                type="button"
+                                class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="left"
+                                title="Save selected area for alerts">Save
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button id="editGeoJson"
+                                onclick="$('#editWithinGeoJSON #updateGeoJson').attr('leaflet_id',$(this).attr('leaflet_id'));$('#editWithinGeoJSON textarea').text(JSON.stringify(map._layers[$(this).attr('leaflet_id')].toGeoJSON(),null, '\t'));$('#editWithinGeoJSON').modal('toggle')"
+                                type="button" class="btn btn-default btn-xs">Edit
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <a id="exportGeoJson" download="geoJson.json" href="#"
+                           onclick="exportToGeoJSON(this,JSON.stringify(map._layers[$(this).attr('leaflet_id')].toGeoJSON(),null, '\t'))"
+                           class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="left"
+                           title="Export selected area as a geoJson file">Export</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="templateLoader"></div>
+    <div id="setStationeryAlert">
+        <form role="form" style="width: auto;">
+            <div class="form-group">
+                <label class="text-primary" for="queryName">Query name</label>
+                <input class="form-control" id="queryName" placeholder="Query name" type="text">
+                <span class="help-block">Can use this name to locate the execution plan</span>
+
+                <label class="text-primary" for="areaName">Fence name</label>
+                <input class="form-control" id="areaName" placeholder="Stationery name" type="text">
+                <span class="help-block">Name of the selected area(i.e colombo)</span>
+
+                <label class="text-primary" for="time">Time</label>
+                <input class="form-control" id="time" placeholder="Seconds" type="text">
+            </div>
+            <div>
+                <div class="btn-group btn-group-sm btn-group-justified">
+                    <div class="btn-group">
+                        <button id="addStationeryAlert" onclick="setStationeryAlert($(this).attr('leaflet_id'))"
+                                type="button"
+                                class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="left"
+                                title="Save selected area for alerts">Save
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button id="editGeoJson"
+                                onclick="$('#editWithinGeoJSON #updateGeoJson').attr('leaflet_id',$(this).attr('leaflet_id'));$('#editWithinGeoJSON textarea').text(JSON.stringify(map._layers[$(this).attr('leaflet_id')].toGeoJSON(),null, '\t'));$('#editWithinGeoJSON').modal('toggle')"
+                                type="button" class="btn btn-default btn-xs">Edit
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <a id="exportGeoJson" download="geoJson.json" href="#"
+                           onclick="exportToGeoJSON(this,JSON.stringify(map._layers[$(this).attr('leaflet_id')].toGeoJSON(),null, '\t'))"
+                           class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="left"
+                           title="Export selected area as a geoJson file">Export</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

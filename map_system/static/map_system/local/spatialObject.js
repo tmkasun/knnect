@@ -267,6 +267,7 @@ class SpatialObject {
             .prop({id: 'markerPopup-' + this.id});
         this.popupTemplate.find('.marker-data').attr({'data-id': this.id});
         this.marker.bindPopup(this.popupTemplate.html());
+        // this.marker
 
     }
 
@@ -335,7 +336,12 @@ class SpatialObject {
         // TODO: use general popup DOM
         this.popupTemplate.find('#speed').html(this.speed);
         this.popupTemplate.find('#heading').html(this.heading);
-        this.marker.setPopupContent(this.popupTemplate.html())
+        this.marker.setPopupContent(this.popupTemplate.html());
+        this.marker.on("click", function (event) {
+            var object_id = event.target.options.title;
+            $("#object-control-panel").attr("data-object_id", object_id);
+            $("#object-control").sideNav('show');
+        });
 
     }
 

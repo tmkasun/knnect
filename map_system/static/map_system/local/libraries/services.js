@@ -15,8 +15,9 @@ class MapService {
      * Create single instance of axios client to make connections with back end apis
      */
     constructor() {
+        let host_origin = typeof location !== 'undefined' ? location.origin : "";
         this.service_endpoint = "/apis/";
-        this.baseURL = location.origin + '/apis';
+        this.baseURL =  host_origin + '/apis';
         this.client = request;
         // this.client.domain = this.baseURL;
     }
@@ -64,8 +65,9 @@ class SpatialActivityService extends MapService {
         return response;
     }
 }
-
-window.LKStates = LKStates;
-window.SpatialActivityService = SpatialActivityService;
+if (typeof(window) !== 'undefined') {
+    window.LKStates = LKStates;
+    window.SpatialActivityService = SpatialActivityService;
+}
 module.exports.LKStates = LKStates;
 module.exports.SpatialActivityService = SpatialActivityService;

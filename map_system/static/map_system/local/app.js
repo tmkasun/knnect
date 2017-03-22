@@ -314,7 +314,7 @@ $(function () {
             focusOnSpatialObject(objectId)
         }
     });
-    var side_bar_button = $(".side-nav-bar");
+    var side_bar_button = $("#object-control");
     side_bar_button.sideNav({
         menuWidth: 400, // Default is 300
         closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor

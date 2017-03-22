@@ -2076,8 +2076,9 @@ var MapService =
 function MapService() {
     _classCallCheck(this, MapService);
 
+    var host_origin = typeof location !== 'undefined' ? location.origin : "";
     this.service_endpoint = "/apis/";
-    this.baseURL = location.origin + '/apis';
+    this.baseURL = host_origin + '/apis';
     this.client = request;
     // this.client.domain = this.baseURL;
 };
@@ -2135,15 +2136,24 @@ var SpatialActivityService = function (_MapService2) {
     }
 
     _createClass(SpatialActivityService, [{
-        key: 'getHistory',
+        key: 'getSessionPath',
 
         /**
          *
          * @param object_id {String} Id of an object i:e: IMEI , Registration number or UUID
          * @param limit {Number} Number of records needs to be fetched.
          */
-        value: function getHistory(object_id, limit) {
+        value: function getSessionPath(object_id, limit) {
             var response = this.client.get(this.baseURL + '/session_path/' + object_id).query({ limit: limit });
+            return response;
+        }
+    }, {
+        key: 'getHistory',
+        value: function getHistory(object_id, start_time, end_time) {
+            var response = this.client.get(this.baseURL + '/history/' + object_id).query({
+                start_time: start_time,
+                end_time: end_time
+            });
             return response;
         }
     }]);
@@ -2151,8 +2161,10 @@ var SpatialActivityService = function (_MapService2) {
     return SpatialActivityService;
 }(MapService);
 
-window.LKStates = LKStates;
-window.SpatialActivityService = SpatialActivityService;
+if (typeof window !== 'undefined') {
+    window.LKStates = LKStates;
+    window.SpatialActivityService = SpatialActivityService;
+}
 module.exports.LKStates = LKStates;
 module.exports.SpatialActivityService = SpatialActivityService;
 
@@ -2169,15 +2181,27 @@ module.exports.SpatialActivityService = SpatialActivityService;
 var services = __webpack_require__(8);
 function registerHandlers() {
     $(document).on('click', '#current-session', function (event) {
+        /* TODO: change current-session id used in marker popup */
         var sp_service = new services.SpatialActivityService();
         var data = $(this).parents().siblings().closest('.marker-data').data();
-        var promised_history = sp_service.getHistory(data.id);
+        var promised_history = sp_service.getSessionPath(data.id);
         promised_history.then(function (response) {
             var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : data.id;
 
             var status = response.status;
             var history_data = response.body;
             currentSpatialObjects[id].drawPath(history_data);
+        });
+    });
+    $("#history-modal").on("click", ".modal-action", function (event) {
+        event.preventDefault();
+        var start_date = $("#start_date").val();
+        var end_date = $("#end_date").val();
+        var object_id = $("#object-control-panel").data().object_id;
+        var sp_service = new services.SpatialActivityService();
+        var promised_history = sp_service.getHistory(object_id, start_date, end_date); /* TODO: need to get object ID */
+        promised_history.then(function (response) {
+            var path = response.body;
         });
     });
 }

@@ -3,7 +3,7 @@
  */
 var services = require('./services');
 function registerHandlers() {
-    $(document).on('click', '#current-session', function (event) {
+    $(document).on('click', '#current-session', function (event) { /* TODO: change current-session id used in marker popup */
         var sp_service = new services.SpatialActivityService();
         var data = $(this).parents().siblings().closest('.marker-data').data();
         var promised_history = sp_service.getSessionPath(data.id);
@@ -19,11 +19,12 @@ function registerHandlers() {
         event.preventDefault();
         var start_date = $("#start_date").val();
         var end_date = $("#end_date").val();
+        var object_id = $("#object-control-panel").data().object_id;
         var sp_service = new services.SpatialActivityService();
         var promised_history = sp_service.getHistory(object_id, start_date, end_date); /* TODO: need to get object ID */
         promised_history.then(
             function (response) {
-                debugger;
+                var path = response.body;
             }
         );
     })
