@@ -2199,9 +2199,12 @@ function registerHandlers() {
         var end_date = $("#end_date").val();
         var object_id = $("#object-control-panel").data().object_id;
         var sp_service = new services.SpatialActivityService();
-        var promised_history = sp_service.getHistory(object_id, start_date, end_date); /* TODO: need to get object ID */
+        var promised_history = sp_service.getHistory(object_id, start_date, end_date);
+        /* TODO: need to get object ID */
         promised_history.then(function (response) {
-            var path = response.body;
+            var object_id = $("#object-control-panel").data().object_id;
+            var this_object = currentSpatialObjects[object_id];
+            this_object.drawPath(response.body);
         });
     });
 }
