@@ -42,6 +42,11 @@ class ObjectService(object):
 
     @csrf_exempt
     def history(request, id):
+        # TODO: try this but it's eating performance
+        # db.spatial_objects.find({$where : 'var created_at = new ISODate(this.properties.created_at);
+        # var condition = (created_at.getDate() == 24 && created_at.getMonth() == 2 &&
+        #  created_at.getFullYear() == 2017) ;
+        # return condition;'})
         try:
             start_time = request.GET.get(SpatialCons.START_TIME)
             end_time = request.GET.get(SpatialCons.END_TIME)

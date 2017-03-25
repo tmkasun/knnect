@@ -100,8 +100,8 @@ class KnnectHandler(TCPServer):
                 'heading': data.true_course,
                 'speed': data.spd_over_grnd,
                 'state': "NORMAL",
-                "created_at": record_datetime,
-                "updated_at": datetime.utcnow()
+                "created_at": record_datetime.isoformat(),
+                "updated_at": datetime.utcnow().isoformat()
             }
             g_feature = geojson.Feature(geometry=g_point, id=imei, properties=g_properties)
             # self.ws_handler.connections[3].write_message(g_point)
