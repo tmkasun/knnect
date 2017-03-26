@@ -2156,6 +2156,12 @@ var SpatialActivityService = function (_MapService2) {
             });
             return response;
         }
+    }, {
+        key: 'getHistoryDates',
+        value: function getHistoryDates(object_id) {
+            var response = this.client.get(this.baseURL + '/history_dates/' + object_id);
+            return response;
+        }
     }]);
 
     return SpatialActivityService;
@@ -2193,7 +2199,22 @@ function registerHandlers() {
             currentSpatialObjects[id].drawPath(history_data);
         });
     });
-    $("#history-modal").on("click", ".modal-action", function (event) {
+    $('#history-modal').modal({
+        ready: function ready() {
+            var sp_service = new services.SpatialActivityService();
+            var object_id = $("#object-control-panel").data().object_id;
+            var history_dates = sp_service.getHistoryDates(object_id);
+            history_dates.then(function (response) {
+                var data = JSON.parse(response.body);
+                data.forEach(function (element) {
+                    var date = new Date(element._id);
+                    date.setHours(0, 0, 0, 0);
+                    var epoch_time = date.getTime();
+                    $('.picker__day[data-pick="' + epoch_time + '"]').addClass("history-available");
+                });
+            });
+        }
+    }).on("click", ".modal-action", function (event) {
         event.preventDefault();
         var start_date = $("#start_date").val();
         var end_date = $("#end_date").val();

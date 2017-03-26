@@ -1,3 +1,9 @@
+.history-available {
+    color: crimson;
+    background-color: khaki;
+    border-radius: 82px;
+}
+
 #map {
     width: auto;
     height: 93vh;

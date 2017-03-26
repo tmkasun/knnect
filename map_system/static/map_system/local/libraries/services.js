@@ -64,6 +64,11 @@ class SpatialActivityService extends MapService {
         });
         return response;
     }
+
+    getHistoryDates(object_id) {
+        var response = this.client.get(this.baseURL + '/history_dates/' + object_id);
+        return response;
+    }
 }
 if (typeof(window) !== 'undefined') {
     window.LKStates = LKStates;

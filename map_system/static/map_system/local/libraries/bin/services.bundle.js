@@ -2156,6 +2156,12 @@ var SpatialActivityService = function (_MapService2) {
             });
             return response;
         }
+    }, {
+        key: 'getHistoryDates',
+        value: function getHistoryDates(object_id) {
+            var response = this.client.get(this.baseURL + '/history_dates/' + object_id);
+            return response;
+        }
     }]);
 
     return SpatialActivityService;

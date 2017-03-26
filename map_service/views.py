@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from map_service.lib.JsonResponseFactory import JSONResponseFactory
 from map_service.lib.SpatialUtils import SpatialUtils
 from map_service.lib.SpatialUtils import SpatialCons
+from bson import json_util
 
 
 # https://medium.com/@vasjaforutube/django-mongodb-django-rest-framework-mongoengine-ee4eb5857b9a#.pzfldga4w
@@ -58,3 +59,44 @@ class ObjectService(object):
         path = SpatialObjects.objects(db_query)
         serialized_path = SpatialObjectsSerializer(path, many=True)
         return JSONResponseFactory(serialized_path.data).get_response()
+
+    @csrf_exempt
+    def history_dates(request, id):
+        pipe = [
+            {
+                "$match": {
+                    "id": "{}".format(id)
+                }
+            },
+            {
+                "$project": {
+                    "id": 1,
+                    "properties.created_at": {
+                        "$substr": [
+                            "$properties.created_at",
+                            0,
+                            10
+                        ]
+                    }
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$properties.created_at",
+                    "count": {
+                        "$sum": 1
+                    },
+                    "id": {
+                        "$first": "$id"
+                    }
+                }
+            },
+            {
+                "$sort": {
+                    "_id": 1
+                }
+            }
+        ]
+        history_dates_cursor = SpatialObjects.objects.aggregate(*pipe)
+        history_dates = json_util.dumps(history_dates_cursor)
+        return JSONResponseFactory(history_dates).get_response()
