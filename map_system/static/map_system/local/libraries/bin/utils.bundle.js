@@ -2217,10 +2217,10 @@ function registerHandlers() {
     }).on("click", ".modal-action", function (event) {
         event.preventDefault();
         var start_date = $("#start_date").val();
-        var end_date = $("#end_date").val();
+        // var end_date = $("#end_date").val();
         var object_id = $("#object-control-panel").data().object_id;
         var sp_service = new services.SpatialActivityService();
-        var promised_history = sp_service.getHistory(object_id, start_date, end_date);
+        var promised_history = sp_service.getHistory(object_id, start_date);
         /* TODO: need to get object ID */
         promised_history.then(function (response) {
             var object_id = $("#object-control-panel").data().object_id;

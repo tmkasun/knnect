@@ -4,7 +4,7 @@ from map_service.serializers import LkStateSerializer
 from map_service.serializers import SpatialObjectsSerializer
 from map_service.models import LkState
 from map_service.models import SpatialObjects
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.views.decorators.csrf import csrf_exempt
 from map_service.lib.JsonResponseFactory import JSONResponseFactory
@@ -52,10 +52,15 @@ class ObjectService(object):
             start_time = request.GET.get(SpatialCons.START_TIME)
             end_time = request.GET.get(SpatialCons.END_TIME)
             SpatialUtils.validate_date(start_time)
-            SpatialUtils.validate_date(end_time)
+            start_time = datetime.strptime(start_time, SpatialCons.DATE_FORMAT)
+            if not end_time:
+                end_time = start_time + timedelta(days=1)
+            else:
+                SpatialUtils.validate_date(end_time)
         except ValueError as e:
             return JSONResponseFactory({"error": str(e)}, 400).get_response()
-        db_query = Q(id=id) & Q(properties__created_at__lte=end_time) & Q(properties__created_at__gte=start_time)
+        db_query = Q(id=id) & Q(properties__created_at__lte=end_time.strftime(SpatialCons.DATE_FORMAT)) & Q(
+            properties__created_at__gte=start_time.strftime(SpatialCons.DATE_FORMAT))
         path = SpatialObjects.objects(db_query)
         serialized_path = SpatialObjectsSerializer(path, many=True)
         return JSONResponseFactory(serialized_path.data).get_response()
