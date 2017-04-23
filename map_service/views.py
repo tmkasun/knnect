@@ -12,6 +12,7 @@ from map_service.lib.SpatialUtils import SpatialUtils
 from map_service.lib.SpatialUtils import SpatialCons
 from bson import json_util
 
+import jwt
 
 # https://medium.com/@vasjaforutube/django-mongodb-django-rest-framework-mongoengine-ee4eb5857b9a#.pzfldga4w
 
@@ -23,9 +24,12 @@ class LastKnownService(object):
 
     @csrf_exempt
     def lk_states(self):
+        # jwt_header = self.META['HTTP_X_JWT_ASSERTION']
+        # jwt_claims = jwt.decode(jwt_header, verify=False)
         states = LkState.objects.all()
         serialized = LkStateSerializer(states, many=True)
         return JSONResponseFactory(serialized.data).get_response()
+        # return JSONResponseFactory(jwt_claims).get_response()
 
 
 class ObjectService(object):
